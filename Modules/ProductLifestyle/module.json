@@ -1,0 +1,13 @@
+{
+    "name": "ProductLifestyle",
+    "alias": "productlifestyle",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\ProductLifestyle\\Providers\\ProductLifestyleServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

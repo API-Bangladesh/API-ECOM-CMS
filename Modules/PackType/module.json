@@ -1,0 +1,13 @@
+{
+    "name": "PackType",
+    "alias": "packtype",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\PackType\\Providers\\PackTypeServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

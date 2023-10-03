@@ -1,0 +1,13 @@
+{
+    "name": "Combo",
+    "alias": "combo",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Combo\\Providers\\ComboServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

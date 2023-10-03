@@ -1,0 +1,13 @@
+{
+    "name": "ComboCategory",
+    "alias": "combocategory",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\ComboCategory\\Providers\\ComboCategoryServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

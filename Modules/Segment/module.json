@@ -1,0 +1,13 @@
+{
+    "name": "Segment",
+    "alias": "segment",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Segment\\Providers\\SegmentServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

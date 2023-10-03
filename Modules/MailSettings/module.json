@@ -1,0 +1,13 @@
+{
+    "name": "MailSettings",
+    "alias": "mailsettings",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\MailSettings\\Providers\\MailSettingsServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

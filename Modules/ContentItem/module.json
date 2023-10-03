@@ -1,0 +1,13 @@
+{
+    "name": "ContentItem",
+    "alias": "contentitem",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\ContentItem\\Providers\\ContentItemServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

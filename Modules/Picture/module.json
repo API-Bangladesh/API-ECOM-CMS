@@ -1,0 +1,13 @@
+{
+    "name": "Picture",
+    "alias": "picture",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Picture\\Providers\\PictureServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

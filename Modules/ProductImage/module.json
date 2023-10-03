@@ -1,0 +1,13 @@
+{
+    "name": "ProductImage",
+    "alias": "productimage",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\ProductImage\\Providers\\ProductImageServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

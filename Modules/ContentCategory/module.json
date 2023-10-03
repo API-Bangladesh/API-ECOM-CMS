@@ -1,0 +1,13 @@
+{
+    "name": "ContentCategory",
+    "alias": "contentcategory",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\ContentCategory\\Providers\\ContentCategoryServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

@@ -1,0 +1,13 @@
+{
+    "name": "DocumentCategory",
+    "alias": "documentcategory",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\DocumentCategory\\Providers\\DocumentCategoryServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

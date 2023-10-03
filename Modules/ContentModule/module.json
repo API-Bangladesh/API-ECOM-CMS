@@ -1,0 +1,13 @@
+{
+    "name": "ContentModule",
+    "alias": "contentmodule",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\ContentModule\\Providers\\ContentModuleServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

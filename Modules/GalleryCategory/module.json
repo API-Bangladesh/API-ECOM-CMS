@@ -1,0 +1,13 @@
+{
+    "name": "GalleryCategory",
+    "alias": "gallerycategory",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\GalleryCategory\\Providers\\GalleryCategoryServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

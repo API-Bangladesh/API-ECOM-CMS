@@ -1,0 +1,13 @@
+{
+    "name": "VariantOption",
+    "alias": "variantoption",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\VariantOption\\Providers\\VariantOptionServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

@@ -1,0 +1,13 @@
+{
+    "name": "CustomOrder",
+    "alias": "customorder",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\CustomOrder\\Providers\\CustomOrderServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
