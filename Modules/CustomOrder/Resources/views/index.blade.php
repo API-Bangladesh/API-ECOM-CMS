@@ -36,7 +36,7 @@
                     </div>
                     <!-- /entry heading -->
                     @if (permission('customorder-add'))
-                        <button class="btn btn-primary btn-sm" onclick="showFormModal('Add New Custom Order','Save');clearOldImage()">
+                        <button class="btn btn-primary btn-sm add_new" onclick="showFormModal('Add New Custom Order','Save');clearOldImage()">
                             <i class="fas fa-plus-square"></i> Add New
                         </button>
                     @endif
@@ -960,7 +960,15 @@
         $('#grand_total').val(grand_total);
     })
 
-    //view custom order
+    //default load todays date
+        $(document).ready(function() {
+            $('.add_new').click(function() {
+                var currentDate = new Date().toISOString().slice(0, 16); // Get the current date and time in ISO format
+                $("#order_date").val(currentDate);
+            });
+        });
+
+        //view custom order
         $(document).on('click', '.view_data', function () {
             let id = $(this).data('id');
             rowCounter = 0;
