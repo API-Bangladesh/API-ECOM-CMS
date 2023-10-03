@@ -942,7 +942,7 @@
 
             $('.grand_total_text').text(grand_total);
             $('#grand_total').val(grand_total);
-        },2500);
+        },1500);
     }
 
     //discount & shipping charge
