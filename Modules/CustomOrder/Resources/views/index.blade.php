@@ -715,6 +715,12 @@
                         $('#billing').append(`<option value=""> Please select </option>`);
                         $('#shipping').append(`<option value=""> Please select </option>`);
                     }
+                    //if shipping address set as billing address
+                    if ($("#isDefaultShipping").is(":checked")) {
+                        setTimeout(function(){
+                            $('#billing_address').val($('#shipping_address').val());
+                        },1200)
+                    }
 
                     if(type=='customer_id') {
                         // Use the map function to create a new array of titles
@@ -749,9 +755,16 @@
             });
         };
 
+        $("#isDefaultShipping").click(function(){
+            $('#billing_address').val($('#shipping_address').val());
+        });
+
         //create customer
         $(document).ready(function() {
-            // $('#customer_id').append(`<button type="button" class="btn btn-primary shown">Create</button>`);
+            $('.customer_create').selectpicker({
+                noneResultsText: '<button type="button" class="btn btn-primary shown">Create</button>'
+            });
+
             var createOption = $('<option>', {
                 value: 'create',
                 text: 'Create',
