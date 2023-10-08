@@ -656,7 +656,6 @@
 
             $('.grand_total_text').text(grand_total);
             $('#grand_total').val(grand_total);
-
         }
 
         function getOrderStatus(order_status_id,id) {
@@ -761,7 +760,7 @@
 
         //create customer
         $(document).ready(function() {
-            $('.customer_create').selectpicker({
+            $('.customer_id').selectpicker({
                 noneResultsText: '<button type="button" class="btn btn-primary shown">Create</button>'
             });
 
@@ -897,7 +896,6 @@
             }
         });
     });
-
 
    //single item quantity change calculation
     function getQuantityList(value='',className='',sl){

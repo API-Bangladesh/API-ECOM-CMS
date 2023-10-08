@@ -99,12 +99,14 @@
 
 </div>
 @include('customorder::order-message-modal')
+@include('customorder::message_order_create_modal')
 @endsection
 
 @push('script')
 <script src="js/spartan-multi-image-picker-min.js"></script>
 <script>
 var table;
+let rowCounter = 0;
 $(document).ready(function(){
 
     table = $('#dataTable').DataTable({
@@ -434,6 +436,399 @@ function showStoreFormModal(modal_title, btn_text)
     $('#store_or_update_modal .modal-title').html('<i class="fas fa-plus-square"></i> '+modal_title);
     $('#store_or_update_modal #save-btn').text(btn_text);
 }
+
+//create customer
+$(document).ready(function() {
+    $('.page').hide();
+    $('.save').hide();
+    //if create option is selected
+    // Listen for changes in the select element
+    $('#page_id').on('change', function() {
+        // Check if the selected option has the class "shown"
+        if ($('option:selected', this).hasClass('shown')) {
+            // Show the 'row' div
+            $('.page').show();
+            $('.save').show();
+        } else {
+            // Hide the 'row' div
+            $('.page').hide();
+            $('.save').hide();
+        }
+    });
+});
+
+//save page
+$(document).on('click', '#save', function (event) {
+    let form = document.getElementById('store_or_update_form');
+    let formData = new FormData(form);
+    let url = "{{route('customorder.save_page')}}";
+    let id = $('#update_id').val();
+    let method;
+    if (id) {
+        method = 'update';
+    } else {
+        method = 'add';
+    }
+    event.preventDefault();
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: formData,
+        dataType: "JSON",
+        contentType: false,
+        processData: false,
+        cache: false,
+        beforeSend: function(){
+            $('#save').addClass('kt-spinner kt-spinner--md kt-spinner--light');
+        },
+        complete: function(){
+            $('#save').removeClass('kt-spinner kt-spinner--md kt-spinner--light');
+        },
+        success: function (data) {
+            get_pages();
+            $('#store_or_update_form').find('.is-invalid').removeClass('is-invalid');
+            $('#store_or_update_form').find('.error').remove();
+            if (data.status == false) {
+                $.each(data.errors, function (key, value) {
+                    $('#store_or_update_form input#' + key).addClass('is-invalid');
+                    $('#store_or_update_form textarea#' + key).addClass('is-invalid');
+                    $('#store_or_update_form select#' + key).parent().addClass('is-invalid');
+                    if(key == 'code'){
+                        $('#store_or_update_form #' + key).parents('.form-group').append(
+                            '<small class="error text-danger">' + value + '</small>');
+                    }else{
+                        $('#store_or_update_form #' + key).parent().append(
+                            '<small class="error text-danger">' + value + '</small>');
+                    }
+
+                });
+            } else {
+                notification(data.status, data.message);
+                if (data.status == 'success') {
+                    if (method == 'update') {
+                        table.ajax.reload(null, false);
+                    } else {
+                        table.ajax.reload();
+                    }
+                    // $('#store_or_update_modal').modal('hide');
+                }
+            }
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
+            $('.error').empty();
+            if(jqXHR.status === 422) {
+                var errors = $.parseJSON(jqXHR.responseText);
+                $.each(errors.errors, function (key, value) {
+                    $('#store_or_update_form input#' + key).addClass('is-invalid');
+                    $('#store_or_update_form textarea#' + key).addClass('is-invalid');
+                    $('#store_or_update_form select#' + key).parent().addClass('is-invalid');
+                    if(key == 'code'){
+                        $('#store_or_update_form #' + key).parents('.form-group').append(
+                            '<small class="error text-danger">' + value + '</small>');
+                    }else{
+                        $('#store_or_update_form #' + key).parent().append(
+                            '<small class="error text-danger">' + value + '</small>');
+                    }
+
+                });
+            }
+
+            if (jqXHR.status === 403) {
+                Swal.fire({
+                    title: "Errr!",
+                    text: 'You do not have the right permission!',
+                    icon: "danger",
+                    width:400,
+                    button: "Ok!",
+                });
+            }
+        }
+    });
+});
+
+function get_pages(){
+    let url = "{{route('customorder.get_pages')}}";
+    $.ajax({
+        url: url,
+        type: "GET",
+        dataType: "JSON",
+        contentType: false,
+        processData: false,
+        cache: false,
+        success: function (data) {
+            $('#page_id').empty();
+            var option = '<option value="">Please select</option>';
+            data.map(function(page,key){
+                option += `<option value="${page.id}">${page.page}</option>`;
+            });
+            $('#page_id').append(option);
+            $('#page_id').selectpicker('refresh');
+
+        },error:function (error){
+            console.log(error);
+        }
+    })
+}
+$('.close','.cls').click(function (){
+   alert('close');
+});
+//single item quantity change calculation
+function getQuantityList(value='',className='',sl){
+    //delay for edit form if product change then wait to update price
+    setTimeout(() => {
+        // Get the quantity and price values
+        var quantity = parseFloat($(document).find(`#quantity-${sl}`).val());
+        var price = parseFloat($(document).find(`#unit_price-${sl}`).val());
+
+        // Calculate the single total
+        var single_total = parseFloat(quantity * price);
+        $(`#total-${sl}`).val(single_total);
+
+        var all_product_total = 0;
+        //count total number of product input fields
+        var unitPriceInputs = document.querySelectorAll('input[name="unit_price[]"]');
+        var TotalCount = unitPriceInputs.length;
+        var individual_total = 0;
+        var all_product_total = 0;
+        var qty = 0;
+        var pric = 0;
+
+        for (var i = 0; i < TotalCount; i++) {
+            qty = parseFloat($(`#quantity-${i}`).val()) || 1;
+            pric = parseFloat($(`#unit_price-${i}`).val()) || 0;
+            individual_total = qty * pric;
+            all_product_total += individual_total;
+        }
+        $(`#total`).val(all_product_total);
+
+        //shipping charge, discount and grand total
+        var subtotal_val = parseFloat($('#total').val());
+        var discount = parseFloat($('#discount').val()) || 0;
+        ;
+        var total_after_discount = subtotal_val - discount;
+
+        //add shipping charge
+        var shipping_charge = parseFloat($('#shipping_charge').val()) || 0;
+        ;
+        //var grand_total = total_after_discount+shipping_charge;
+        var grand_total = (total_after_discount + shipping_charge);
+
+        $('.grand_total_text').text(grand_total);
+        $('#grand_total').val(grand_total);
+    },1500);
+}
+//Get Customer Address
+function getCustomer(customer_id,type=null,form=null) {
+    var address_id='';
+    if(type=='address_id'){
+        address_id=customer_id;
+    }
+
+    $.ajax({
+        url: "{{route('customorder.customer_address')}}",
+        type: "get",
+        data: { customer_id: customer_id,type:type,address_id:address_id },
+        dataType:"JSON",
+        success: function(response) {
+            if(form==null){
+                $('#billing').empty();
+                $('#shipping').empty();
+                $('#billing').append(`<option value=""> Please select </option>`);
+                $('#shipping').append(`<option value=""> Please select </option>`);
+            }
+            //if shipping address set as billing address
+            if ($("#isDefaultShipping").is(":checked")) {
+                setTimeout(function(){
+                    $('#billing_address').val($('#shipping_address').val());
+                },1200)
+            }
+
+            if(type=='customer_id') {
+                // Use the map function to create a new array of titles
+                response.data.map(function (item) {
+                    $('#billing').append(`<option value="${item.id}">${item.title} </option>`);
+                    $('#shipping').append(`<option value="${item.id}">${item.title} </option>`);
+                });
+                $('.selectpicker').selectpicker('refresh');
+
+            }else if(type=='address_id' && form=='billing'){
+                response.data.map(function (item) {
+                    var complete_address = 'Name: '+item.customer.name+',\nAddress: '+item.address_line_1+', '+item.address_line_2+
+                        ', Post Code: '+item.postcode+', Division: '+item.division.name+', District: '
+                        +item.district.name+', Upazila: '+item.upazila.name+',\nPhone: '+item.phone;
+                    $('#billing_address').val(complete_address);
+                })
+                $('.selectpicker').selectpicker('refresh');
+
+            }else if(type=='address_id' && form=='shipping'){
+                response.data.map(function (item) {
+                    var complete_address = 'Name: '+item.customer.name+',\nAddress: '+item.address_line_1+', '+item.address_line_2+
+                        ', Post Code: '+item.postcode+', Division: '+item.division.name+', District: '
+                        +item.district.name+', Upazila: '+item.upazila.name+',\nPhone: '+item.phone;
+                    $('#shipping_address').val(complete_address);
+                })
+                $('.selectpicker').selectpicker('refresh');
+            }
+        },
+        error: function(xhr, ajaxOption, thrownError) {
+            console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
+        }
+    });
+};
+
+//Shipping address place at billing address
+$("#isDefaultShipping").click(function(){
+    $('#billing_address').val($('#shipping_address').val());
+});
+
+function getVariantOptionList(variant_id,variant_option_id='',number=0){
+    $.ajax({
+        url:"{{ url('vo-list') }}/"+variant_id,
+        type:"GET",
+        dataType:"JSON",
+        success:function(data){
+            if(data.inventory_offer==''){
+                data.inventory.map(function(invent,key){
+                    $(`#unit_price-${number}`).val(invent.sale_price);
+                });
+
+            }else if(data.inventory_offer){
+                data.inventory.map(function(invent,key){
+                    $(`#unit_price-${number}`).val(invent.offer_price);
+                });
+            }
+            var opt = "<option value=''>Select Please</option>";
+            const loadedContentDiv = `.${variant_option_id}`;
+
+            // $('#store_or_update_form #variant_option_id').empty();
+            $.each(data, function(key, value) {
+                if (!$.trim(data)){
+                    $('#store_or_update_form .variant_option_id').addClass('d-none');
+                }
+                else{
+
+                    $('#store_or_update_form .variant_option_id').removeClass('d-none');
+                    opt +='<option value="'+ key +'">'+ value +'</option>';
+                    // loadedContentDiv.append(opt);
+                }
+            });
+            $(loadedContentDiv).html(opt);
+        },
+    });
+}
+//javascript dynamic append remove
+// let rowCounter = 0;
+function addRow() {
+    if(rowCounter==0){
+        rowCounter++;
+    }
+    const rowId = `row-${rowCounter}`;
+    const div = document.createElement('div');
+    div.classList.add('row');
+    div.innerHTML = `<div class="form-group col-md-4 required">
+                                    <label for="inventory_id[]">Products</label>
+                                    <select name="inventory_id[]" id="inventory_id-${rowCounter}" class="form-control selectpicker main-${rowCounter}" onchange="getVariantOptionList(this.value,'row-${rowCounter}',${rowCounter})" >
+                                        <option value='' >Please select </option>
+                                        @foreach ($inventories as $inventory)
+    <option value="{{ $inventory->id }}">{{ $inventory->title }}</option>
+                                @endforeach
+    </select>
+</div>
+<div class="form-group col-md-2 ">
+    <label for="unit_price-${rowCounter}">Price</label>
+            <input type="number" readonly name="unit_price[]" id="unit_price-${rowCounter}" class="form-control " value="" placeholder="Enter Price">
+        </div>
+
+        <div class="form-group col-md-2 required">
+            <label for="quantity-${rowCounter}">Quantity</label>
+            <input type="number" name="quantity[]" id="quantity-${rowCounter}" onchange="getQuantityList(this.value,'quantity-${rowCounter}',${rowCounter})" class="form-control " value="" placeholder="Enter Quantity">
+        </div>
+
+        <div class="form-group col-md-2 required">
+            <label for="total-${rowCounter}">Total</label>
+            <input type="number" readonly name="total[]" id="total-${rowCounter}" class="form-control " value="" placeholder="Enter Total">
+        </div>
+        <div class="form-group col-md-2">
+          <input class="mt-5" type="button" value="Remove" onclick="removeRow(this)">
+        </div>`; // Closing </div> added here
+    document.getElementById('content').appendChild(div);
+    rowCounter++;
+    $('.selectpicker').selectpicker('refresh');
+}
+function removeRow(input) {
+    input.parentNode.parentNode.remove();
+    updateGrandTotal();
+}
+function updateGrandTotal(){
+    var unitPrice = document.querySelectorAll('input[name="unit_price[]"]');
+    var CountTotal = unitPrice.length;
+
+    var individual_total =0;
+    var all_product_total =0;
+    var qty = 0;
+    var pric = 0;
+
+    for(var i=0; i<CountTotal; i++){
+        qty = parseFloat($(`#quantity-${i}`).val())||1;
+        pric = parseFloat($(`#unit_price-${i}`).val())||0;
+        individual_total = qty*pric;
+        all_product_total += individual_total;
+    }
+    $(`#total`).val(all_product_total);
+
+    //discount and shipping
+    var subtotal_val = parseFloat($('#total').val());
+    var discount = parseFloat($('#discount').val())|| 0;
+    var total_after_discount = subtotal_val - discount;
+
+    //add shipping charge
+    var shipping_charge = parseFloat($('#shipping_charge').val())|| 0;
+    //var grand_total = total_after_discount+shipping_charge;
+    var grand_total = (total_after_discount + shipping_charge);
+
+    $('.grand_total_text').text(grand_total);
+    $('#grand_total').val(grand_total);
+}
+//discount & shipping charge
+$('input[name="discount"],input[name="shipping_charge"]').on('change', function() {
+    var subtotal_val = parseFloat($('#total').val());
+    var discount = parseFloat($('#discount').val())|| 0;;
+    var total_after_discount = subtotal_val - discount;
+
+    //add shipping charge
+    var shipping_charge = parseFloat($('#shipping_charge').val())|| 0;;
+    //var grand_total = total_after_discount+shipping_charge;
+    var grand_total = (total_after_discount + shipping_charge);
+
+    $('.grand_total_text').text(grand_total);
+    $('#grand_total').val(grand_total);
+});
+
+// Message Order Create Modal Open
+function showMessageFormModal(message=null, id = null) {
+    // Reset other elements
+    $('#message_store_or_update_form')[0].reset();
+    $('#content').empty();
+    $('#inventory_id-0').val('').trigger('change'); // Empty select
+
+    // Default load today's date
+    var currentDate = new Date().toISOString().slice(0, 16);
+    $("#order_date").val(currentDate);
+
+    // Show the modal
+    $('#message_order_store_or_update_modal').modal({
+        keyboard: false,
+        backdrop: 'static',
+    });
+    $('#message_order_store_or_update_modal .modal-title').html(
+        '<i class="fas fa-edit"></i> <span>Add Message Custom Order</span>');
+    $('#message_order_store_or_update_modal #save-btn').text('Save ');
+
+    // Order message display using the updateOrderText function
+    $('#myTextarea').val(message);
+}
+
 
 </script>
 @endpush

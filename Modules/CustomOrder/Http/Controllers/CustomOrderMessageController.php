@@ -6,8 +6,12 @@ use App\Traits\UploadAble;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\CustomOrder\Entities\PageModel;
 use Modules\CustomOrder\Entities\OrderMessage;
+use Modules\Customers\Entities\Customers;
+use Modules\Inventory\Entities\Inventory;
 use Modules\Base\Http\Controllers\BaseController;
+use Modules\PaymentMethod\Entities\PaymentMethod;
 use Modules\CustomOrder\Http\Requests\OrderMessageRequest;
 
 class CustomOrderMessageController extends BaseController
@@ -24,11 +28,11 @@ class CustomOrderMessageController extends BaseController
         // dd($this->model->getDatatableList());
         if (permission('ordermessage-access')) {
             $this->setPageData('Order Message', 'Order Message', 'fas fa-box');
-//            $data = [
-//                'categories' => Category::get()
-//            ];
-//            return view('customorder::order-message-index', $data);
-            return view('customorder::order-message-index');
+            $data['pages'] = PageModel::get();
+            $data['customers'] = Customers::get();
+            $data['inventories'] = Inventory::get();
+            $data['payment_methods'] = PaymentMethod::get();
+            return view('customorder::order-message-index',$data);
         } else {
             return $this->unauthorized_access_blocked();
         }
@@ -53,7 +57,7 @@ class CustomOrderMessageController extends BaseController
                     $action = '';
 
                     if (permission('ordermessage-add')) {
-                        $action .= ' <a class="dropdown-item edit_data" data-id="' . $value->id . '"><i class="fas fa-plus-square text-primary"></i> Add Order</a>';
+                        $action .= ' <a class="dropdown-item" onclick="showMessageFormModal(\'' . $value->order_text . '\', ' . $value->id . ');" data-id="' . $value->id . '"><i class="fas fa-plus-square text-primary"></i> Add Order</a>';
                     }if (permission('ordermessage-edit')) {
                         $action .= ' <a class="dropdown-item edit_data" data-id="' . $value->id . '"><i class="fas fa-edit text-primary"></i> Edit</a>';
                     }

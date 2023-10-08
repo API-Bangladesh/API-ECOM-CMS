@@ -27,6 +27,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('district-by-division', 'CustomOrderController@district_by_division')->name('district_by_division');
         Route::get('upazila-by-district', 'CustomOrderController@upazila_by_district')->name('upazila_by_district');
         Route::post('save-customer', 'CustomOrderController@save_customer')->name('save_customer');
+        Route::post('save-page', 'CustomOrderController@save_page')->name('save_page');
+        Route::get('get-pages', 'CustomOrderController@get_pages')->name('get_pages');
     });
 });
 

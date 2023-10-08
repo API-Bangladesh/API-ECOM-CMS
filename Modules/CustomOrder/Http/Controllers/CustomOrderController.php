@@ -19,8 +19,11 @@ use Modules\Location\Entities\Division;
 use Modules\Order\Entities\OrderItem;
 use Modules\PaymentMethod\Entities\PaymentMethod;
 use Modules\Product\Entities\Product;
+use Modules\CustomOrder\Http\Requests\PageRequest;
+use Modules\CustomOrder\Entities\PageModel;
 use DB;
 use Modules\Variant\Entities\Variant;
+use setasign\Fpdi\PdfReader\Page;
 
 class CustomOrderController extends BaseController
 {
@@ -370,7 +373,7 @@ class CustomOrderController extends BaseController
                 }catch(\Exception $e){
                     DB::rollBack();
                     $output = $this->access_blocked();
-                  return response()->json(['messsage'=>$e->getMessage()]);
+                    return response()->json(['messsage'=>$e->getMessage()]);
                     return response()->json($output);
                 }
 
@@ -384,6 +387,50 @@ class CustomOrderController extends BaseController
             DB::rollBack();
             return response()->json($this->access_blocked());
         }
+    }
+
+    public function save_page(PageRequest $request){
+        if ($request->ajax()) {
+            DB::beginTransaction();
+            if (permission('customorder-add') || permission('customorder-edit')) {
+                try{
+                    $collection = collect($request->validated());
+
+                    //page data save
+                    $data_page = [
+                        'page' => $request->page,
+                    ];
+
+                    $result = PageModel::updateOrCreate(
+                        ['id' => $request->update_id], // The unique column to identify the record
+                        $data_page
+                    );
+
+                    $output = $this->store_message($result, $request->update_id);
+
+                    DB::commit();
+                    return response()->json($output);
+
+                }catch(\Exception $e){
+                    DB::rollBack();
+                    $output = $this->access_blocked();
+                    return response()->json(['messsage'=>$e->getMessage()]);
+                    return response()->json($output);
+                }
+
+            } else {
+                DB::rollBack();
+                $output = $this->access_blocked();
+                return response()->json($output);
+            }
+
+        } else {
+            DB::rollBack();
+            return response()->json($this->access_blocked());
+        }
+    }
+    public function get_pages(){
+        return $data = PageModel::get();
     }
 }
 
