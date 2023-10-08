@@ -64,6 +64,8 @@
                         <div class="form-group col-md-4 ">
                             <label for="order_text">Order Messsage</label>
                             <textarea id="myTextarea" class="form-control " rows="2" cols="20" ></textarea>
+                            <input type="hidden" name="order_message_id" id="order_message_id">
+                            <input type="hidden" name="media" id="media" class="media">
                         </div>
                     </div>
 
@@ -182,7 +184,7 @@
                 <!-- Modal Footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-sm" id="close-btn" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary btn-sm" id="save-btn"></button>
+                    <button type="button" class="btn btn-primary btn-sm" id="save-custom-btn"></button>
                 </div>
                 <!-- /modal footer -->
             </form>

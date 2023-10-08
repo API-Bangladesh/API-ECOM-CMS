@@ -30,9 +30,9 @@ class Order extends BaseModel
 
     protected $table = 'orders';
 
-    protected $fillable = ['order_date', 'customer_id', 'billing_address', 'shipping_address',
+    protected $fillable = ['order_date', 'customer_id', 'media', 'billing_address', 'shipping_address',
         'total', 'discount', 'shipping_charge','tax','grand_total','payment_method_id',
-        'payment_details','payment_status_id','order_status_id','created_at','updated_at'];
+        'payment_details','payment_status_id','order_message_id','order_status_id','created_at','updated_at'];
 
     protected $name;
 

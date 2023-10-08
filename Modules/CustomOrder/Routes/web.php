@@ -32,8 +32,8 @@ Route::group(['middleware' => ['auth']], function () {
     });
 });
 
-Route::prefix('ordermessage')->group(function() {
-    Route::get('/', 'CustomOrderMessageController@index');
+
+    Route::get('ordermessage', 'CustomOrderMessageController@index');
     Route::group(['prefix'=>'ordermessage','as'=>'ordermessage.'],function(){
         Route::post('datatable-data', 'CustomOrderMessageController@get_datatable_data')->name('datatable.data');
         Route::post('store-or-update', 'CustomOrderMessageController@store_or_update_data')->name('store.or.update');
@@ -41,5 +41,6 @@ Route::prefix('ordermessage')->group(function() {
         Route::post('delete', 'CustomOrderMessageController@delete')->name('delete');
         Route::post('bulk-delete', 'CustomOrderMessageController@bulk_delete')->name('bulk.delete');
         Route::post('change-status', 'CustomOrderMessageController@change_status')->name('change.status');
+        Route::post('message-store-or-update', 'CustomOrderMessageController@message_store_or_update_data')->name('messagestore.or.update');
     });
-});
+

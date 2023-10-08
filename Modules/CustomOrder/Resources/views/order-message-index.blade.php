@@ -806,7 +806,7 @@ $('input[name="discount"],input[name="shipping_charge"]').on('change', function(
 });
 
 // Message Order Create Modal Open
-function showMessageFormModal(message=null, id = null) {
+function showMessageFormModal(message=null, id = null,media=null) {
     // Reset other elements
     $('#message_store_or_update_form')[0].reset();
     $('#content').empty();
@@ -823,12 +823,109 @@ function showMessageFormModal(message=null, id = null) {
     });
     $('#message_order_store_or_update_modal .modal-title').html(
         '<i class="fas fa-edit"></i> <span>Add Message Custom Order</span>');
-    $('#message_order_store_or_update_modal #save-btn').text('Save ');
+    $('#message_order_store_or_update_modal #save-custom-btn').text('Save ');
 
     // Order message display using the updateOrderText function
     $('#myTextarea').val(message);
+    $('#order_message_id').val(id);
+    $('.media').val(media);
+
+    //If order message data exist then show in edit mode
+
 }
 
+$(document).on('click', '#save-custom-btn', function () {
+    let form = document.getElementById('message_store_or_update_form');
+    let formData = new FormData(form);
+    let url = "{{route('ordermessage.messagestore.or.update')}}";
+    let id = $('#update_id').val();
+    let method;
+    if (id) {
+        method = 'update';
+    } else {
+        method = 'add';
+    }
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: formData,
+        dataType: "JSON",
+        contentType: false,
+        processData: false,
+        cache: false,
+        beforeSend: function(){
+            $('#save-custom-btn').addClass('kt-spinner kt-spinner--md kt-spinner--light');
+        },
+        complete: function(){
+            $('#save-custom-btn').removeClass('kt-spinner kt-spinner--md kt-spinner--light');
+        },
+        success: function (data) {
+            $('#message_store_or_update_form').find('.is-invalid').removeClass('is-invalid');
+            $('#message_store_or_update_form').find('.error').remove();
+            if (data.status == false) {
+                $.each(data.errors, function (key, value) {
+                    $('#message_store_or_update_form input#' + key).addClass('is-invalid');
+                    $('#message_store_or_update_form textarea#' + key).addClass('is-invalid');
+                    $('#message_store_or_update_form select#' + key).parent().addClass('is-invalid');
+                    if(key == 'code'){
+                        $('#message_store_or_update_form #' + key).parents('.form-group').append(
+                            '<small class="error text-danger">' + value + '</small>');
+                    }else{
+                        $('#message_store_or_update_form #' + key).parent().append(
+                            '<small class="error text-danger">' + value + '</small>');
+                    }
+
+                });
+            } else {
+                notification(data.status, data.message);
+                if (data.status == 'success') {
+                    if (method == 'update') {
+                        table.ajax.reload(null, false);
+                    } else {
+                        table.ajax.reload();
+                    }
+                    $('#message_order_store_or_update_modal').modal('hide');
+                    $(this).find('#message_order_store_or_update_modal').trigger('reset');
+
+                }
+            }
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
+
+            if(jqXHR.status === 422) {
+                var errors='';
+                errors = $.parseJSON(jqXHR.responseText);
+                $('.text-danger').empty();
+                $.each(errors.errors, function (key, value) {
+
+                    $('#message_order_store_or_update_modal input#' + key).addClass('is-invalid');
+                    $('#message_order_store_or_update_modal textarea#' + key).addClass('is-invalid');
+                    $('#message_order_store_or_update_modal select#' + key).parent().addClass('is-invalid');
+
+                    $('#message_order_store_or_update_modal #' + key).parents('.form-group').append(
+                        '<small class="error text-danger">' + value + '</small>');
+
+                    // $('#store_or_update_modal #' + key).parent().append(
+                    //     '<small class="error text-danger">' + value + '</small>');
+                });
+            }
+
+            if (jqXHR.status === 403) {
+                Swal.fire({
+                    title: "Errr!",
+                    text: 'You do not have the right permission!',
+                    icon: "danger",
+                    width:400,
+                    button: "Ok!",
+                });
+            }
+        }
+        // error: function (xhr, ajaxOption, thrownError) {
+        //     console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
+        // }
+    });
+});
 
 </script>
 @endpush
