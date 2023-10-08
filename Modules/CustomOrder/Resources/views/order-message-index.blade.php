@@ -832,6 +832,7 @@ function showMessageFormModal(message=null, id = null, media=null, order_id=null
 
     //If order message data exist then show in edit mode
     if (order_id && order_id !==0) {
+        rowCounter = 0;
         $.ajax({
             url: "{{ route('ordermessage.message_order_edit') }}",
             type: "POST",
