@@ -806,7 +806,7 @@ $('input[name="discount"],input[name="shipping_charge"]').on('change', function(
 });
 
 // Message Order Create Modal Open
-function showMessageFormModal(message=null, id = null, media=null, order_id=null) {
+function showMessageFormModal(id = null, media=null, order_id=null) {
     // Reset other elements
     $('#message_store_or_update_form')[0].reset();
     $('#content').empty();
@@ -825,21 +825,21 @@ function showMessageFormModal(message=null, id = null, media=null, order_id=null
         '<i class="fas fa-edit"></i> <span>Add Message Custom Order</span>');
     $('#message_order_store_or_update_modal #save-custom-btn').text('Save ');
 
-    // Order message display using the updateOrderText function
-    $('#myTextarea').val(message);
-    $('#order_message_id').val(id);
-    $('.media').val(media);
-
     //If order message data exist then show in edit mode
     if (order_id && order_id !==0) {
         rowCounter = 0;
         $.ajax({
             url: "{{ route('ordermessage.message_order_edit') }}",
             type: "POST",
-            data: { id: order_id, _token: _token},
+            data: { id: order_id, _token: _token,'message_id':id},
             dataType: "JSON",
             success: function (data) {
                 console.log(data);
+                // Order message display using the updateOrderText function
+                $('#myTextarea').val(data?.order_message?.order_text);
+                $('#order_message_id').val(id);
+                $('.media').val(media);
+
                 data.order_items.map(function (val, key) {
 
                     const rowId = `row-${rowCounter}`;
@@ -925,6 +925,23 @@ function showMessageFormModal(message=null, id = null, media=null, order_id=null
                 console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
             }
         });
+    }
+    else if(id){
+        $.ajax({
+            url: "{{ route('ordermessage.edit') }}",
+            type: "POST",
+            data: {id: id, _token: _token},
+            dataType: "JSON",
+            success: function (data) {
+                // Order message display using the updateOrderText function
+                $('#myTextarea').val(data.order_text);
+                $('#order_message_id').val(id);
+                $('.media').val(media);
+            },
+            error: function (xhr, ajaxOption, thrownError) {
+                console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
+            }
+        })
     }
 }
 
