@@ -806,7 +806,7 @@ $('input[name="discount"],input[name="shipping_charge"]').on('change', function(
 });
 
 // Message Order Create Modal Open
-function showMessageFormModal(message=null, id = null,media=null) {
+function showMessageFormModal(message=null, id = null, media=null, order_id=null) {
     // Reset other elements
     $('#message_store_or_update_form')[0].reset();
     $('#content').empty();
@@ -831,7 +831,100 @@ function showMessageFormModal(message=null, id = null,media=null) {
     $('.media').val(media);
 
     //If order message data exist then show in edit mode
+    if (order_id && order_id !==0) {
+        $.ajax({
+            url: "{{ route('ordermessage.message_order_edit') }}",
+            type: "POST",
+            data: { id: order_id, _token: _token},
+            dataType: "JSON",
+            success: function (data) {
+                console.log(data);
+                data.order_items.map(function (val, key) {
 
+                    const rowId = `row-${rowCounter}`;
+                    var invventoryOptionHtml ="<option value='' >Please select</option>";
+
+                    data.all_inventories.map(function(inventoryProduct,key){
+                        if(inventoryProduct.id == val.inventory_id) {
+                            invventoryOptionHtml += "<option value='" + inventoryProduct.id + "' selected>" + inventoryProduct.title + "</option>";
+                        }else{
+                            invventoryOptionHtml += "<option  value=" + inventoryProduct.id + ">" + inventoryProduct.title + "</option>";
+                        }
+                    })
+                    var result = val.unit_price * val.quantity;
+                    if (rowCounter ==0) {
+                        $('#inventory_id-0').val(val?.inventory?.id);
+                        $('#unit_price-0').val(val?.unit_price);
+                        $('#quantity-0').val(val?.quantity);
+                        $('#total-0').val(result);
+                        rowCounter++;
+                    } else {
+                        // Create new row with variant and variant_option selects
+                        const div = document.createElement('div');
+                        div.classList.add('row');
+                        div.innerHTML = `<div class="form-group col-md-4">
+                                  <label for="inventory_id-${rowCounter}">Products</label>
+                                  <select name="inventory_id[]" id="inventory_id-${rowCounter}" class="form-control main-${rowCounter}" onchange="getVariantOptionList(this.value, 'row-${rowCounter}')" >
+                                       ${invventoryOptionHtml}
+                                    </select>
+                                  </div>
+                                  <div class="form-group col-md-2 ">
+                                        <label for="unit_price-${rowCounter}">Price</label>
+                                        <input type="number" readonly name="unit_price[]" id="unit_price-${rowCounter}" class="form-control " value="${val?.unit_price}" placeholder="Enter Price">
+                                   </div>
+
+                                  <div class="form-group col-md-2 ">
+                                    <label for="quantity-${rowCounter}">Quantity</label>
+                                    <input type="number" name="quantity[]" id="quantity-${rowCounter}" onchange="getQuantityList(this.value,'quantity-${rowCounter}',${rowCounter})" class="form-control " value="${val?.quantity}" placeholder="Enter Quantity">
+                                  </div>
+
+                                  <div class="form-group col-md-2 ">
+                                    <label for="total-${rowCounter}">Total</label>
+                                    <input type="number" disabled="" name="total[]" id="total-${rowCounter}" class="form-control " value="${result}" placeholder="Enter Total">
+                                  </div>
+                                  <div class="form-group col-md-2">
+                                    <input class="mt-5" type="button" value="Remove" onclick="removeRow(this)">
+                                  </div>`;
+                        // Append the new row to the 'content' element
+                        document.getElementById('content').appendChild(div);
+                        rowCounter++;
+                    }
+                });
+
+                $('#message_order_store_or_update_modal #customer_id').val(data.customer_id);
+                $('#message_order_store_or_update_modal #billing_address').val(data.billing_address);
+                $('#message_order_store_or_update_modal #shipping_address').val(data.shipping_address);
+                $('#message_order_store_or_update_modal #total').val(data.total);
+                $('#message_order_store_or_update_modal #discount').val(data.discount);
+                $('#message_order_store_or_update_modal #shipping_charge').val(data.shipping_charge);
+                $('#message_order_store_or_update_modal #order_status_id').val(data.order_status_id);
+                $('#message_order_store_or_update_modal #payment_method_id').val(data.payment_method_id);
+                $('#message_order_store_or_update_modal #payment_status_id').val(data.payment_status_id);
+
+                $('#message_order_store_or_update_modal .grand_total_text').text(data.grand_total);
+                $('#message_order_store_or_update_modal #grand_total').val(data.grand_total);
+                $('#message_order_store_or_update_modal #update_id').val(data.id);
+                $('#message_order_store_or_update_modal #special_note').val(data.special_note);
+
+                var formattedDate = new Date(data.order_date).toISOString().slice(0, 16);
+                $('#message_order_store_or_update_modal #order_date').val(formattedDate);
+
+                $('#message_order_store_or_update_modal .selectpicker').selectpicker('refresh');
+
+                $('#message_order_store_or_update_modal').modal({
+                    keyboard: false,
+                    backdrop: 'static',
+                });
+                $('#message_order_store_or_update_modal .modal-title').html(
+                    '<i class="fas fa-edit"></i> <span>Edit Custom Order</span>');
+                $('#message_order_store_or_update_modal #save-custom-btn').text('Update');
+
+            },
+            error: function (xhr, ajaxOption, thrownError) {
+                console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
+            }
+        });
+    }
 }
 
 $(document).on('click', '#save-custom-btn', function () {

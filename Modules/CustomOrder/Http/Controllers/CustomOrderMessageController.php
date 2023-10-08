@@ -60,7 +60,8 @@ class CustomOrderMessageController extends BaseController
                     $action = '';
 
                     if (permission('ordermessage-add')) {
-                        $action .= ' <a class="dropdown-item" onclick="showMessageFormModal(\'' . $value->order_text . '\', ' . $value->id . ', \'' . $value->media . '\');" data-id="' . $value->id . '"><i class="fas fa-plus-square text-primary"></i> Add Order</a>';
+                        $action .= ' <a class="dropdown-item" onclick="showMessageFormModal(\'' . addslashes($value->order_text) . '\', ' . $value->id . ', \'' . addslashes($value->media) . '\', ' . ($value->order->id ?? 0) . '); return false;" data-id="' . $value->id . '"><i class="fas fa-plus-square text-primary"></i> Add Order</a>';
+
                     }if (permission('ordermessage-edit')) {
                         $action .= ' <a class="dropdown-item edit_data" data-id="' . $value->id . '"><i class="fas fa-edit text-primary"></i> Edit</a>';
                     }
@@ -204,6 +205,26 @@ class CustomOrderMessageController extends BaseController
             return response()->json($this->access_blocked());
         }
     }
+
+    public function message_order_edit(Request $request){
+        if ($request->ajax()) {
+            if (permission('customorder-edit')) {
+
+                $order = new Order;
+                $data = $order->findOrFail($request->id);
+                $data->load('orderItems');
+                $data['all_inventories'] = Inventory::get();
+                // $data['variants'] = Variant::get();
+                $output = $this->data_message($data);
+            } else {
+                $output = $this->access_blocked();
+            }
+            return response()->json($output);
+        } else {
+            return response()->json($this->access_blocked());
+        }
+    }
+
     public function message_store_or_update_data(CustomOrderMessageRequest $request)
     {
         if ($request->ajax()) {
@@ -258,5 +279,6 @@ class CustomOrderMessageController extends BaseController
         }
 
     }
+
 }
 

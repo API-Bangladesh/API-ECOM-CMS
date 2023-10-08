@@ -42,5 +42,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('bulk-delete', 'CustomOrderMessageController@bulk_delete')->name('bulk.delete');
         Route::post('change-status', 'CustomOrderMessageController@change_status')->name('change.status');
         Route::post('message-store-or-update', 'CustomOrderMessageController@message_store_or_update_data')->name('messagestore.or.update');
+        Route::post('message-order-edit', 'CustomOrderMessageController@message_order_edit')->name('message_order_edit');
     });
 

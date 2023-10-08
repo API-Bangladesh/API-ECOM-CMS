@@ -5,6 +5,7 @@ namespace Modules\CustomOrder\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Base\Entities\BaseModel;
+use Modules\Order\Entities\Order;
 
 class OrderMessage extends BaseModel
 {
@@ -30,7 +31,8 @@ class OrderMessage extends BaseModel
             $this->column_order = ['title', 'sale_price', 'stock_quantity', 'status', null];
         }
 
-        $query = self::toBase();
+//        $query = self::toBase();
+        $query = self::with('order');
 
         /*****************
          * *Search Data **
@@ -65,6 +67,9 @@ class OrderMessage extends BaseModel
     public function count_all()
     {
         return self::toBase()->get()->count();
+    }
+    public function order(){
+        return $this->belongsTo(Order::class,'id','order_message_id');
     }
 }
 
