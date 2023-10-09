@@ -51,12 +51,12 @@
                     </div>
 
                     <div class="row">
-                        <x-form.textarea labelName="Billing Address" placeholder="Billing Address" name="billing_address" id="billing_address" col="col-md-4 required" />
-                        <x-form.textarea labelName="Shipping Address" placeholder="Shipping Address" name="shipping_address" id="shipping_address" col="col-md-4 required" />
                         <div class="form-group col-md-4 required">
                             <label for="order_date">Delivery Time</label>
                             <input type="datetime-local" name="order_date" id="order_date" class="form-control " value="" placeholder="Enter Order Date">
                         </div>
+                        <x-form.textarea labelName="Shipping Address" placeholder="Shipping Address" name="shipping_address" id="shipping_address" col="col-md-4 required" />
+                        <x-form.textarea labelName="Billing Address" placeholder="Billing Address" name="billing_address" id="billing_address" col="col-md-4 required" />
                     </div>
 
 {{--                    <div class="row">--}}
@@ -106,7 +106,7 @@
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="special_note">Special note</label>
-                                    <input type="text" name="special_note" id="special_note" class="form-control " value="" placeholder="Enter Special Note">
+                                    <textarea name="special_note" id="special_note" class="form-control " placeholder="Enter Special Note"></textarea>
                                 </div>
                             </div>
                         </div>

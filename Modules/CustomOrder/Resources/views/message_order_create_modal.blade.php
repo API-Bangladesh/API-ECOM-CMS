@@ -105,7 +105,7 @@
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="special_note">Special note</label>
-                                    <input type="text" name="special_note" id="special_note" class="form-control " value="" placeholder="Enter Special Note">
+                                    <textarea name="special_note" rows="2" cols="20" id="special_note" class="form-control " placeholder="Enter Special Note"></textarea>
                                 </div>
                             </div>
                         </div>
