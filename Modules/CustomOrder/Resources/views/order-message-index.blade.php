@@ -355,6 +355,7 @@ $(document).ready(function(){
                     $('#store_or_update_form #media').val(data.media);
                     $('#store_or_update_form #date_time').val(data.date_time);
                     $('#store_or_update_form #info').val(data.info);
+                    $('#store_or_update_form #page_id').val(data.page_id);
                     $('#store_or_update_form .selectpicker').selectpicker('refresh');
 
                     $('#store_or_update_modal').modal({
