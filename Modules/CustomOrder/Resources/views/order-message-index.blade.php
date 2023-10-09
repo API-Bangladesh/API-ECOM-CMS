@@ -99,6 +99,7 @@
 
 </div>
 @include('customorder::order-message-modal')
+@include('customorder::create_customer')
 @include('customorder::message_order_create_modal')
 @endsection
 
@@ -1038,5 +1039,170 @@ $(document).on('click', '#save-custom-btn', function () {
     });
 });
 
+//create customer
+$(document).ready(function() {
+    $('.customer_id').selectpicker({
+        noneResultsText: '<button type="button" class="btn btn-primary shown">Create</button>'
+    });
+    var createOption = $('<option>', {
+        value: 'create',
+        text: 'Create',
+        class: 'btn btn-primary shown'
+    });
+    // Prepend the option to the select element
+    $('#customer_id').prepend(createOption);
+    // Refresh the SelectPicker to update the display
+    $('#customer_id').selectpicker('refresh');
+});
+
+$(document).on('click', '.shown', function() {
+    $('#message_order_store_or_update_modal').modal('hide');
+    $('#myModal2').modal('show');
+    $('#myModal2').modal({
+        keyboard: false,
+        backdrop: 'static'
+    });
+});
+
+$(document).on('click', '.cls,closee', function() {
+    $('#myModal2').modal('hide');
+});
+
+function getDistrictByDivision(div_id) {
+    if (div_id) {
+        $.ajax({
+            type: 'GET',
+            url: '{{ route("customorder.district_by_division") }}',
+            data: {
+                'div_id': div_id // Pass div_id as the 'dcId' parameter
+            },
+            success: function (data) {
+                $('#district_id').empty();
+                var district_option = '<option value="">Please select</option>';
+                data.map(function(district,key){
+                    district_option +=`<option value="${district.id}">${district.name}</option>`;
+                });
+                $('#district_id').append(district_option);
+                $('.selectpicker').selectpicker('refresh');
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+}
+
+function getUpazilaByDistrict(dis_id) {
+    if (dis_id) {
+        $.ajax({
+            type: 'GET',
+            url: '{{ route("customorder.upazila_by_district") }}',
+            data: {
+                'dis_id': dis_id // Pass div_id as the 'dcId' parameter
+            },
+            success: function (data) {
+                $('#upazila_id').empty();
+                var dpazila_option = '<option value="">Please select</option>';
+                data.map(function(dpazila,key){
+                    dpazila_option +=`<option value="${dpazila.id}">${dpazila.name}</option>`;
+                });
+                $('#upazila_id').append(dpazila_option);
+                $('.selectpicker').selectpicker('refresh');
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+}
+
+//save customer
+$(document).on('click', '#save-customer', function () {
+    let form = document.getElementById('store_or_update_customer');
+    let formData = new FormData(form);
+    let url = "{{route('customorder.save_customer')}}";
+    let id = $('#update_id').val();
+    let method;
+    if (id) {
+        method = 'update';
+    } else {
+        method = 'add';
+    }
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: formData,
+        dataType: "JSON",
+        contentType: false,
+        processData: false,
+        cache: false,
+        beforeSend: function(){
+            $('#save-customer').addClass('kt-spinner kt-spinner--md kt-spinner--light');
+        },
+        complete: function(){
+            $('#save-customer').removeClass('kt-spinner kt-spinner--md kt-spinner--light');
+        },
+        success: function (data) {
+            $('#store_or_update_customer').find('.is-invalid').removeClass('is-invalid');
+            $('#store_or_update_customer').find('.error').remove();
+            if (data.status == false) {
+                $.each(data.errors, function (key, value) {
+                    $('#store_or_update_customer input#' + key).addClass('is-invalid');
+                    $('#store_or_update_customer textarea#' + key).addClass('is-invalid');
+                    $('#store_or_update_customer select#' + key).parent().addClass('is-invalid');
+                    if(key == 'code'){
+                        $('#store_or_update_customer #' + key).parents('.form-group').append(
+                            '<small class="error text-danger">' + value + '</small>');
+                    }else{
+                        $('#store_or_update_customer #' + key).parent().append(
+                            '<small class="error text-danger">' + value + '</small>');
+                    }
+                });
+            } else {
+                notification(data.status, data.message);
+                if (data.status == 'success') {
+                    if (method == 'update') {
+                        table.ajax.reload(null, false);
+                    } else {
+                        table.ajax.reload();
+                    }
+                    $('#myModal2').modal('hide');
+                    $(this).find('#myModal2').trigger('reset');
+
+                }
+            }
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
+
+            if(jqXHR.status === 422) {
+                var errors = $.parseJSON(jqXHR.responseText);
+                $.each(errors.errors, function (key, value) {
+                    $('#store_or_update_customer input#' + key).addClass('is-invalid');
+                    $('#store_or_update_customer textarea#' + key).addClass('is-invalid');
+                    $('#store_or_update_customer select#' + key).parent().addClass('is-invalid');
+                    if(key == 'code'){
+                        $('#store_or_update_customer #' + key).parents('.form-group').append(
+                            '<small class="error text-danger">' + value + '</small>');
+                    }else{
+                        $('#store_or_update_customer #' + key).parent().append(
+                            '<small class="error text-danger">' + value + '</small>');
+                    }
+
+                });
+            }
+
+            if (jqXHR.status === 403) {
+                Swal.fire({
+                    title: "Errr!",
+                    text: 'You do not have the right permission!',
+                    icon: "danger",
+                    width:400,
+                    button: "Ok!",
+                });
+            }
+        }
+    });
+});
 </script>
 @endpush

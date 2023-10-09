@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Order\Entities\Order;
 use Modules\Order\Entities\OrderItem;
+use Modules\Location\Entities\District;
+use Modules\Location\Entities\Division;
 use Modules\CustomOrder\Entities\PageModel;
 use Modules\CustomOrder\Entities\OrderMessage;
 use Modules\Customers\Entities\Customers;
@@ -32,6 +34,7 @@ class CustomOrderMessageController extends BaseController
         if (permission('ordermessage-access')) {
             $this->setPageData('Order Message', 'Order Message', 'fas fa-box');
             $data['pages'] = PageModel::get();
+            $data['divisions'] = Division::get();
             $data['customers'] = Customers::get();
             $data['inventories'] = Inventory::get();
             $data['payment_methods'] = PaymentMethod::get();
@@ -209,13 +212,11 @@ class CustomOrderMessageController extends BaseController
     public function message_order_edit(Request $request){
         if ($request->ajax()) {
             if (permission('customorder-edit')) {
-
                 $order = new Order;
                 $data = $order->findOrFail($request->id);
                 $data->load('orderItems');
                 $data['all_inventories'] = Inventory::get();
                 $data['order_message'] = OrderMessage::where('id',$request->message_id)->first();
-                // $data['variants'] = Variant::get();
                 $output = $this->data_message($data);
             } else {
                 $output = $this->access_blocked();
