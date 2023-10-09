@@ -13,7 +13,7 @@ class OrderMessage extends BaseModel
 
     protected $table = 'order_messages';
 
-    protected $fillable = ['id', 'order_text', 'media', 'date_time', 'info', 'created_at', 'updated_at'];
+    protected $fillable = ['id', 'page_id', 'order_text', 'media', 'date_time', 'info', 'created_at', 'updated_at'];
 
     protected $name;
 
@@ -70,6 +70,9 @@ class OrderMessage extends BaseModel
     }
     public function order(){
         return $this->belongsTo(Order::class,'id','order_message_id');
+    }
+    public function page(){
+        return $this->belongsTo(PageModel::class,'page_id','id');
     }
 }
 

@@ -85,6 +85,8 @@
                                 <th>Customer Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
+                                <th>Order Type</th>
+                                <th>Page</th>
                                 <th>Order Status</th>
                                 <th>Payment Status</th>
                                 <th>Action</th>

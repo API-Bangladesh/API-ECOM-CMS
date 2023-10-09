@@ -91,6 +91,8 @@ class CustomOrderController extends BaseController
                     $row[] = $value->customer->name??'';
                     $row[] = $value->customer->email??'';
                     $row[] = $value->customer->phone_number??'';
+                    $row[] = $value->media??'';
+                    $row[] = $value->orderMessage->page->page??'';
 
                     $order_options = '<select name="order_status_id" id="order_status_id" class="form-control order_status_id" onchange="getOrderStatus(this.value, '.$value->id.')">
                         <option value="">Select Please</option>

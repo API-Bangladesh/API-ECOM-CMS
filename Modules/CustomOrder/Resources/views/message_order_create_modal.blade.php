@@ -53,7 +53,6 @@
                             </label>
 
                             <textarea name="shipping_address" rows="4" cols="30" id="shipping_address" class="form-control " placeholder="Shipping Address"></textarea>
-
                         </div>
 
                         <div class="form-group col-md-6">
@@ -63,7 +62,6 @@
                             </select>
                             <textarea name="billing_address" rows="4" cols="30" id="billing_address" class="form-control mt-8" placeholder="Billing Address"></textarea>
                         </div>
-
                     </div>
 
                     <div class="products" style="border: 1px solid #00008b1f;padding: 15px 10px;margin: 0px 0px 10px 0px;">

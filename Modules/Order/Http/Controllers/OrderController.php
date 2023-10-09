@@ -85,6 +85,7 @@ class OrderController extends BaseController
                     $row[] = $no;
                     $row[] = $value->order_date;
                     $row[] = $value->id;
+                    $row[] = $value->media;
                     $row[] = $value->grand_total;
                     $row[] = $options;
                     $row[] = permission('order-edit') ? change_payment_status($value->id,$value->payment_status_id,$value->payment_status_id) : PAYMENT_STATUS_LABEL[$value->payment_status_id];
