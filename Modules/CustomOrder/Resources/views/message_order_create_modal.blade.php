@@ -21,7 +21,7 @@
 
                         <div class="form-group col-md-6">
                             <label for="order_text">Order Messsage</label>
-                            <textarea id="myTextarea" class="form-control " rows="5" cols="40" ></textarea>
+                            <textarea id="myTextarea" class="form-control " rows="5" cols="40"></textarea>
                             <input type="hidden" name="order_message_id" id="order_message_id">
                             <input type="hidden" name="media" id="media" class="media">
                         </div>
@@ -52,7 +52,7 @@
                                 <input type="checkbox" id="isDefaultShipping"> Set Shipping address as billing address
                             </label>
 
-                            <textarea name="shipping_address" id="shipping_address" class="form-control " placeholder="Shipping Address"></textarea>
+                            <textarea name="shipping_address" rows="4" cols="30" id="shipping_address" class="form-control " placeholder="Shipping Address"></textarea>
 
                         </div>
 
@@ -61,7 +61,7 @@
                             <select name="billing" id="billing" class="form-control selectpicker" onchange="getCustomer(this.value,'address_id','billing')" data-live-search="true" >
                                 <option value="">Please select</option>
                             </select>
-                            <textarea name="billing_address" id="billing_address" class="form-control mt-8" placeholder="Billing Address"></textarea>
+                            <textarea name="billing_address" rows="4" cols="30" id="billing_address" class="form-control mt-8" placeholder="Billing Address"></textarea>
                         </div>
 
                     </div>
