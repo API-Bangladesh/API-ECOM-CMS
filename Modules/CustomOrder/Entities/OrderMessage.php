@@ -32,7 +32,7 @@ class OrderMessage extends BaseModel
         }
 
 //        $query = self::toBase();
-        $query = self::with('order');
+        $query = self::with('order','page');
 
         /*****************
          * *Search Data **

@@ -78,6 +78,7 @@
                                 <th>Sl</th>
                                 <th>Order Text</th>
                                 <th>Media</th>
+                                <th>Page</th>
                                 <th>Date Time</th>
                                 <th>Info</th>
                                 <th>Action</th>
@@ -625,7 +626,6 @@ function getCustomer(customer_id,type=null,form=null) {
     if(type=='address_id'){
         address_id=customer_id;
     }
-
     $.ajax({
         url: "{{route('customorder.customer_address')}}",
         type: "get",

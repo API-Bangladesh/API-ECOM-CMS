@@ -37,7 +37,7 @@
                             <option value="">Select Please</option>
                             <option class="shown btn btn-primary" value="">Create</option>
                             @foreach($pages as $page)
-                                <option value="{{$page->page}}">{{$page->page}}</option>
+                                <option value="{{$page->id}}">{{$page->page}}</option>
                             @endforeach
                         </select>
                     </div>
