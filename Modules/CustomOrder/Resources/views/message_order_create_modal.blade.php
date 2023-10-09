@@ -19,7 +19,14 @@
                     <div class="row">
                         <input type="hidden" name="update_id" id="update_id"/>
 
-                        <div class="form-group col-md-4 required">
+                        <div class="form-group col-md-6">
+                            <label for="order_text">Order Messsage</label>
+                            <textarea id="myTextarea" class="form-control " rows="5" cols="40" ></textarea>
+                            <input type="hidden" name="order_message_id" id="order_message_id">
+                            <input type="hidden" name="media" id="media" class="media">
+                        </div>
+
+                        <div class="form-group col-md-6 required">
                             <label for="customer_id">Customer</label>
                             <select name="customer_id" id="customer_id" class="form-control customer_create selectpicker" onchange="getCustomer(this.value,'customer_id')" data-live-search="true" data-live-search-placeholder="Search" title="Choose one of the following" tabindex="null">
                                 <option value="">Please select</option>
@@ -29,9 +36,14 @@
                                     @endforeach
                                 @endif
                             </select>
+
+                            {{--Delivary time--}}
+                            <br/>
+                            <label class="mt-3" for="order_date">Delivery Time</label>
+                            <input type="datetime-local" name="order_date" id="order_date" class="form-control " value="" placeholder="Enter Order Date">
                         </div>
 
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
                             <label for="shipping">Set Shipping Address</label>
                             <select name="shipping" id="shipping" class="form-control selectpicker" onchange="getCustomer(this.value,'address_id','shipping')" data-live-search="true" >
                                 <option value="">Please select</option>
@@ -39,42 +51,20 @@
                             <label class="mt-3" for="isDefaultShipping">
                                 <input type="checkbox" id="isDefaultShipping"> Set Shipping address as billing address
                             </label>
+
+                            <textarea name="shipping_address" id="shipping_address" class="form-control " placeholder="Shipping Address"></textarea>
+
                         </div>
 
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
                             <label for="billing_address">Set Billing Address</label>
                             <select name="billing" id="billing" class="form-control selectpicker" onchange="getCustomer(this.value,'address_id','billing')" data-live-search="true" >
                                 <option value="">Please select</option>
                             </select>
+                            <textarea name="billing_address" id="billing_address" class="form-control mt-8" placeholder="Billing Address"></textarea>
                         </div>
 
                     </div>
-
-                    <div class="row">
-                        <x-form.textarea labelName="Billing Address" placeholder="Billing Address" name="billing_address" id="billing_address" col="col-md-4 required" />
-                        <x-form.textarea labelName="Shipping Address" placeholder="Shipping Address" name="shipping_address" id="shipping_address" col="col-md-4 required" />
-                        <div class="form-group col-md-4 required">
-                            <label for="order_date">Delivery Time</label>
-                            <input type="datetime-local" name="order_date" id="order_date" class="form-control " value="" placeholder="Enter Order Date">
-                        </div>
-                    </div>
-
-                    <div class="row">
-{{--                        <x-form.textarea labelName="Order Messsage" placeholder="Order Messsage" name="order_text" id="order_text" col="col-md-4" />--}}
-                        <div class="form-group col-md-4 ">
-                            <label for="order_text">Order Messsage</label>
-                            <textarea id="myTextarea" class="form-control " rows="2" cols="20" ></textarea>
-                            <input type="hidden" name="order_message_id" id="order_message_id">
-                            <input type="hidden" name="media" id="media" class="media">
-                        </div>
-                    </div>
-
-
-                    {{--                    <div class="row">--}}
-                    {{--                        <x-form.textbox type="number" labelName="Phone" placeholder="Enter Phone" name="phone" col="col-md-4" />--}}
-                    {{--                        <x-form.textbox labelName="Email" name="email" placeholder="Enter Email" col="col-md-4" />--}}
-
-                    {{--                    </div>--}}
 
                     <div class="products" style="border: 1px solid #00008b1f;padding: 15px 10px;margin: 0px 0px 10px 0px;">
                         <div class="row">
