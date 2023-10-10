@@ -270,6 +270,10 @@ class CustomOrderMessageController extends BaseController
         }
 
     }
-
+    //load customer
+    function load_customer(){
+        $customer = Customers::get();
+        return response()->json($customer);
+    }
 }
 

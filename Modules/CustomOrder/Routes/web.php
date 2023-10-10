@@ -35,6 +35,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('ordermessage', 'CustomOrderMessageController@index');
     Route::group(['prefix'=>'ordermessage','as'=>'ordermessage.'],function(){
+        Route::post('load-customer', 'CustomOrderMessageController@load_customer')->name('load_customer');
         Route::post('datatable-data', 'CustomOrderMessageController@get_datatable_data')->name('datatable.data');
         Route::post('store-or-update', 'CustomOrderMessageController@store_or_update_data')->name('store.or.update');
         Route::post('edit', 'CustomOrderMessageController@edit')->name('edit');
