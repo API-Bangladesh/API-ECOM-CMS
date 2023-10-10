@@ -865,6 +865,7 @@
                 $('#save-customer').removeClass('kt-spinner kt-spinner--md kt-spinner--light');
             },
             success: function (data) {
+                load_customer();
                 $('#store_or_update_customer').find('.is-invalid').removeClass('is-invalid');
                 $('#store_or_update_customer').find('.error').remove();
                 if (data.status == false) {
@@ -1129,5 +1130,30 @@
             }
         });
 
+        function load_customer(){
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+            $.ajax({
+                type: 'POST',
+                url: '{{ route("ordermessage.load_customer") }}',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken // Include the CSRF token in the headers
+                },
+                success: function (data) {
+                    console.log(data);
+                    $('#customer_id').empty();
+                    var customer_option = '<option value="create" class="btn btn-primary shown">Create</option>' +
+                        '<option value="">Please select</option>';
+
+                    data.map(function(customer,key){
+                        customer_option +=`<option value="${customer.id}">${customer.name}</option>`;
+                    });
+                    $('#customer_id').append(customer_option);
+                    $('.selectpicker').selectpicker('refresh');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
     </script>
 @endpush
