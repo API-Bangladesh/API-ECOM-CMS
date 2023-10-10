@@ -1042,9 +1042,10 @@ $(document).on('click', '#save-custom-btn', function () {
 
 //create customer
 $(document).ready(function() {
-    $('.customer_id').selectpicker({
+    $('.customer_create').selectpicker({
         noneResultsText: '<button type="button" class="btn btn-primary shown">Create</button>'
     });
+
     var createOption = $('<option>', {
         value: 'create',
         text: 'Create',

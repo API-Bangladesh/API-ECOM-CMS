@@ -760,22 +760,22 @@
             $('#billing_address').val($('#shipping_address').val());
         });
 
-        //create customer
-        $(document).ready(function() {
-            $('.customer_id').selectpicker({
-                noneResultsText: '<button type="button" class="btn btn-primary shown">Create</button>'
-            });
-
-            var createOption = $('<option>', {
-                value: 'create',
-                text: 'Create',
-                class: 'btn btn-primary shown'
-            });
-            // Prepend the option to the select element
-            $('#customer_id').prepend(createOption);
-            // Refresh the SelectPicker to update the display
-            $('#customer_id').selectpicker('refresh');
+    //create customer
+    $(document).ready(function() {
+        $('.customer_create').selectpicker({
+            noneResultsText: '<button type="button" class="btn btn-primary shown">Create</button>'
         });
+
+    var createOption = $('<option>', {
+        value: 'create',
+        text: 'Create',
+        class: 'btn btn-primary shown'
+    });
+    // Prepend the option to the select element
+    $('#customer_id').prepend(createOption);
+    // Refresh the SelectPicker to update the display
+    $('#customer_id').selectpicker('refresh');
+    });
 
         $(document).on('click', '.shown', function() {
             $('#store_or_update_modal').modal('hide');
