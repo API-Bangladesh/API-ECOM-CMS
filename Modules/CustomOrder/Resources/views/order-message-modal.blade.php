@@ -35,7 +35,7 @@
                         <label for="page_id">ID</label>
                         <select name="page_id" id="page_id" class="form-control selectpicker" data-live-search="true" >
                             <option value="">Select Please</option>
-                            <option class="shown btn btn-primary" value="">Create</option>
+                            <option class="show btn btn-primary" value="">Create</option>
                             @foreach($pages as $page)
                                 <option value="{{$page->id}}">{{$page->page}}</option>
                             @endforeach

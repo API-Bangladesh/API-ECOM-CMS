@@ -448,7 +448,7 @@ $(document).ready(function() {
     // Listen for changes in the select element
     $('#page_id').on('change', function() {
         // Check if the selected option has the class "shown"
-        if ($('option:selected', this).hasClass('shown')) {
+        if ($('option:selected', this).hasClass('show')) {
             // Show the 'row' div
             $('.page').show();
             $('.save').show();
