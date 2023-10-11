@@ -30,8 +30,8 @@
                         <h2 class="dt-page__title mb-0 text-primary"><i class="{{ $page_icon }}"></i> {{ $sub_title }}</h2>
                     </div>
                     <!-- /entry heading -->
-                    @if (permission('paymentmethod-add'))
-                        <button class="btn btn-primary btn-sm" onclick="showFormModal('Add New Paymentmethod','Save');clearOldImage()">
+                    @if (permission('page-add'))
+                        <button class="btn btn-primary btn-sm" onclick="showFormModal('Add New Page','Save');clearOldImage()">
                             <i class="fas fa-plus-square"></i> Add New
                         </button>
                     @endif
@@ -67,7 +67,7 @@
                         <table id="dataTable" class="table table-striped table-bordered table-hover">
                             <thead class="bg-primary">
                             <tr>
-                                @if (permission('paymentmethod-bulk-delete'))
+                                @if (permission('page-bulk-delete'))
                                     <th>
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="select_all" onchange="select_all()">
@@ -132,7 +132,7 @@
                     }
                 },
                 "columnDefs": [{
-                    @if (permission('paymentmethod-bulk-delete'))
+                    @if (permission('page-bulk-delete'))
                     "targets": [0,2],
                     @else
                     "targets": [2],
@@ -141,7 +141,7 @@
                     "className": "text-center"
                 },
                     {
-                        @if (permission('paymentmethod-bulk-delete'))
+                        @if (permission('page-bulk-delete'))
                         "targets": [1,2],
                         @else
                         "targets": [0,1,2],
@@ -149,7 +149,7 @@
                         "className": "text-center"
                     },
                     {
-                        @if (permission('paymentmethod-bulk-delete'))
+                        @if (permission('page-bulk-delete'))
                         "targets": [2],
                         @else
                         "targets": [2],
@@ -162,7 +162,7 @@
                     "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'<'float-right'p>>>",
 
                 "buttons": [
-                        @if (permission('paymentmethod-report'))
+                        @if (permission('page-report'))
                     {
                         'extend':'colvis','className':'btn btn-secondary btn-sm text-white','text':'Column'
                     },
@@ -170,7 +170,7 @@
                         "extend": 'print',
                         'text':'Print',
                         'className':'btn btn-secondary btn-sm text-white',
-                        "title": "Paymentmethod List",
+                        "title": "Page List",
                         "orientation": "landscape", //portrait
                         "pageSize": "A4", //A3,A5,A6,legal,letter
                         "exportOptions": {
@@ -187,7 +187,7 @@
                         'text':'CSV',
                         'className':'btn btn-secondary btn-sm text-white',
                         "title": "ComboCategory List",
-                        "filename": "paymentmethod",
+                        "filename": "page",
                         "exportOptions": {
                             columns: function (index, data, node) {
                                 return table.column(index).visible();
@@ -198,8 +198,8 @@
                         "extend": 'excel',
                         'text':'Excel',
                         'className':'btn btn-secondary btn-sm text-white',
-                        "title": "Paymentmethod List",
-                        "filename": "paymentmethod",
+                        "title": "Page List",
+                        "filename": "page",
                         "exportOptions": {
                             columns: function (index, data, node) {
                                 return table.column(index).visible();
@@ -210,8 +210,8 @@
                         "extend": 'pdf',
                         'text':'PDF',
                         'className':'btn btn-secondary btn-sm text-white',
-                        "title": "Paymentmethod List",
-                        "filename": "paymentmethod",
+                        "title": "Page List",
+                        "filename": "page",
                         "orientation": "landscape", //portrait
                         "pageSize": "A4", //A3,A5,A6,legal,letter
                         "exportOptions": {
@@ -219,7 +219,7 @@
                         },
                     },
                         @endif
-                        @if (permission('paymentmethod-bulk-delete'))
+                        @if (permission('page-bulk-delete'))
                     {
                         'className':'btn btn-danger btn-sm delete_btn d-none text-white',
                         'text':'Delete',
@@ -244,7 +244,7 @@
             $(document).on('click', '#save-btn', function () {
                 let form = document.getElementById('store_or_update_form');
                 let formData = new FormData(form);
-                let url = "{{route('paymentmethod.store.or.update')}}";
+                let url = "{{route('page.store.or.update')}}";
                 let id = $('#update_id').val();
                 let method;
                 if (id) {
@@ -298,8 +298,34 @@
                         }
 
                     },
-                    error: function (xhr, ajaxOption, thrownError) {
-                        console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
+                    error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
+
+                        if(jqXHR.status === 422) {
+                            var errors = $.parseJSON(jqXHR.responseText);
+                            $.each(errors.errors, function (key, value) {
+                                $('#store_or_update_form input#' + key).addClass('is-invalid');
+                                $('#store_or_update_form textarea#' + key).addClass('is-invalid');
+                                $('#store_or_update_form select#' + key).parent().addClass('is-invalid');
+                                if(key == 'code'){
+                                    $('#store_or_update_form #' + key).parents('.form-group').append(
+                                        '<small class="error text-danger">' + value + '</small>');
+                                }else{
+                                    $('#store_or_update_form #' + key).parent().append(
+                                        '<small class="error text-danger">' + value + '</small>');
+                                }
+
+                            });
+                        }
+
+                        if (jqXHR.status === 403) {
+                            Swal.fire({
+                                title: "Errr!",
+                                text: 'You do not have the right permission!',
+                                icon: "danger",
+                                width:400,
+                                button: "Ok!",
+                            });
+                        }
                     }
                 });
             });
@@ -311,7 +337,7 @@
                 $('#store_or_update_form').find('.error').remove();
                 if (id) {
                     $.ajax({
-                        url: "{{route('paymentmethod.edit')}}",
+                        url: "{{route('page.edit')}}",
                         type: "POST",
                         data: { id: id,_token: _token},
                         dataType: "JSON",
@@ -322,25 +348,13 @@
                             $('#store_or_update_form #code').val(data.code);
                             $('#store_or_update_form #old_image').val(data.image);
                             $('#store_or_update_form .selectpicker').selectpicker('refresh');
-                            if(data.image){
-                                var image = "{{ asset('storage/'.PaymentMethod_IMAGE_PATH)}}/"+data.image;
-                                $('#store_or_update_form #image img.spartan_image_placeholder').css('display','none');
-                                $('#store_or_update_form #image .spartan_remove_row').css('display','none');
-                                $('#store_or_update_form #image .img_').css('display','block');
-                                $('#store_or_update_form #image .img_').attr('src',image);
-                            }else{
-                                $('#store_or_update_form #image img.spartan_image_placeholder').css('display','block');
-                                $('#store_or_update_form #image .spartan_remove_row').css('display','none');
-                                $('#store_or_update_form #image .img_').css('display','none');
-                                $('#store_or_update_form #image .img_').attr('src','');
-                            }
 
                             $('#store_or_update_modal').modal({
                                 keyboard: false,
                                 backdrop: 'static',
                             });
                             $('#store_or_update_modal .modal-title').html(
-                                '<i class="fas fa-edit"></i> <span>Edit Payment Method </span>');
+                                '<i class="fas fa-edit"></i> <span>Edit Page </span>');
                             $('#store_or_update_modal #save-btn').text('Update');
 
                         },
@@ -358,7 +372,7 @@
                 let id    = $(this).data('id');
                 let name  = $(this).data('name');
                 let row   = table.row($(this).parent('tr'));
-                let url   = "{{ route('paymentmethod.delete') }}";
+                let url   = "{{ route('page.delete') }}";
                 delete_data(id, url, table, row, name);
             });
 
@@ -377,7 +391,7 @@
                         icon: 'warning',
                     });
                 }else{
-                    let url = "{{route('paymentmethod.bulk.delete')}}";
+                    let url = "{{route('page.bulk.delete')}}";
                     bulk_delete(ids,url,table,rows);
                 }
             }
@@ -387,32 +401,10 @@
                 let status = $(this).data('status');
                 let name  = $(this).data('name');
                 let row   = table.row($(this).parent('tr'));
-                let url   = "{{ route('paymentmethod.change.status') }}";
+                let url   = "{{ route('page.change.status') }}";
                 change_status(id,status,name,table,url);
 
             });
-
-            $('#image').spartanMultiImagePicker({
-                fieldName: 'image',
-                maxCount: 1,
-                rowHeight: '200px',
-                groupClassName: 'col-md-12 com-sm-12 com-xs-12',
-                maxFileSize: '',
-                dropFileLabel: 'Drop Here',
-                allowExt: 'png|jpg|jpeg',
-                onExtensionErr: function(index, file){
-                    Swal.fire({icon:'error',title:'Oops...',text: 'Only png,jpg,jpeg file format allowed!'});
-                }
-            });
-
-            $('input[name="image"]').prop('required',true);
-
-            $('.remove-files').on('click', function(){
-                $(this).parents('.col-md-12').remove();
-            });
-
-
-
 
         });
 
@@ -425,10 +417,6 @@
             $('#store_or_update_form').find('.is-invalid').removeClass('is-invalid');
             $('#store_or_update_form').find('.error').remove();
 
-            $('#store_or_update_form #image img.spartan_image_placeholder').css('display','block');
-            $('#store_or_update_form #image .spartan_remove_row').css('display','none');
-            $('#store_or_update_form #image .img_').css('display','none');
-            $('#store_or_update_form #image .img_').attr('src','');
             $('.selectpicker').selectpicker('refresh');
             $('#store_or_update_modal').modal({
                 keyboard: false,
@@ -436,10 +424,6 @@
             });
             $('#store_or_update_modal .modal-title').html('<i class="fas fa-plus-square"></i> '+modal_title);
             $('#store_or_update_modal #save-btn').text(btn_text);
-        }
-        function clearOldImage(){
-            $('#store_or_update_form #image .img_').attr('src','');
-            $('.spartan_remove_row').hide();
         }
     </script>
 @endpush

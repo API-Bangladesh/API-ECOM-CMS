@@ -13,9 +13,12 @@ class PageRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        $rules = [];
+        $rules['page'] = ['required','string','unique:pages,page'];
+        if(request()->update_id){
+            $rules['page'][2] = 'unique:pages,page,'.request()->update_id;
+        }
+        return $rules;
     }
 
     /**

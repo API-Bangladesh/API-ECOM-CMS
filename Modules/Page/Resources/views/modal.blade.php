@@ -18,17 +18,7 @@
             <div class="modal-body">
                 <div class="row">
                     <input type="hidden" name="update_id" id="update_id"/>
-                    <x-form.textbox labelName="Code" name="code" required="required" col="col-md-12" placeholder="Enter Code"/>
-                    <x-form.textbox labelName="Name" name="name" required="required" col="col-md-12" placeholder="Enter Name"/>
-                    <div class="form-group col-md-12">
-                        <label for="image">Payment Method Image</label>
-                        <div class="col-md-12 px-0 text-center">
-                            <div id="image">
-
-                            </div>
-                        </div>
-                        <input type="hidden" name="old_image" id="old_image">
-                    </div>
+                    <x-form.textbox labelName="Page" name="page" required="required" col="col-md-12" placeholder="Enter Social Page Name"/>
                 </div>
             </div>
             <!-- /modal body -->
