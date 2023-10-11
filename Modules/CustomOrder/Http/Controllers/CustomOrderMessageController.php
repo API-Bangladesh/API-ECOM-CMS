@@ -13,6 +13,7 @@ use Modules\Location\Entities\Division;
 use Modules\CustomOrder\Entities\PageModel;
 use Modules\CustomOrder\Entities\OrderMessage;
 use Modules\Customers\Entities\Customers;
+use Modules\Media\Entities\Media;
 use Modules\Inventory\Entities\Inventory;
 use Modules\Base\Http\Controllers\BaseController;
 use Modules\PaymentMethod\Entities\PaymentMethod;
@@ -34,6 +35,7 @@ class CustomOrderMessageController extends BaseController
         if (permission('ordermessage-access')) {
             $this->setPageData('Order Message', 'Order Message', 'fas fa-box');
             $data['pages'] = PageModel::get();
+            $data['medias'] = Media::get();
             $data['divisions'] = Division::get();
             $data['customers'] = Customers::get();
             $data['inventories'] = Inventory::get();
@@ -79,7 +81,7 @@ class CustomOrderMessageController extends BaseController
                     $row[] = $no;
 
                     $row[] = $value->order_text;
-                    $row[] = $value->media;
+                    $row[] = $value->media->name??'';
                     $row[] = $value->page->page??'';
                     $row[] = $value->date_time;
                     $row[] = $value->info;

@@ -15,7 +15,7 @@ class OrderMessageRequest extends FormRequest
     {
         $rules = [];
         $rules['order_text']       = ['required'];
-        $rules['media']       = ['required'];
+        $rules['media_id']       = ['required'];
         $rules['page_id']       = ['required'];
         $rules['date_time']       = ['nullable'];
         $rules['info']       = ['nullable'];

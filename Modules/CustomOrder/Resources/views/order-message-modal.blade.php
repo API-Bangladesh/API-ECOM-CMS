@@ -22,12 +22,11 @@
 
                     <div class="form-group col-md-12 ">
                         <label for="media">Media</label>
-                        <select name="media" id="media" class="form-control selectpicker" data-live-search="true" >
+                        <select name="media_id" id="media_id" class="form-control selectpicker" data-live-search="true" >
                             <option value="">Select Please</option>
-                            <option value="Facebook">Facebook</option>
-                            <option value="WhatsApp">WhatsApp</option>
-                            <option value="Instagram">Instagram</option>
-                            <option value="Phone">Phone</option>
+                         @foreach($medias as $media)
+                            <option value="{{$media->id}}">{{$media->name}}</option>
+                         @endforeach
                         </select>
                     </div>
 

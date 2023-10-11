@@ -11,6 +11,7 @@ use Modules\Inventory\Entities\Inventory;
 use Modules\Order\Entities\Order;
 use Modules\Customers\Entities\Customers;
 use Modules\Order\Entities\OrderItem;
+use Modules\Media\Entities\Media;
 use Modules\Order\Http\Requests\OrderFormRequest;
 use Illuminate\Support\Facades\Mail;
 use Modules\PaymentMethod\Entities\PaymentMethod;
@@ -85,7 +86,7 @@ class OrderController extends BaseController
                     $row[] = $no;
                     $row[] = $value->order_date;
                     $row[] = $value->id;
-                    $row[] = $value->media;
+                    $row[] = $value->media->name??'';
                     $row[] = $value->grand_total;
                     $row[] = $options;
                     $row[] = permission('order-edit') ? change_payment_status($value->id,$value->payment_status_id,$value->payment_status_id) : PAYMENT_STATUS_LABEL[$value->payment_status_id];

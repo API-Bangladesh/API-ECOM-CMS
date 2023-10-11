@@ -352,7 +352,7 @@ $(document).ready(function(){
 
                     $('#store_or_update_form #update_id').val(data.id);
                     $('#store_or_update_form #order_text').val(data.order_text);
-                    $('#store_or_update_form #media').val(data.media);
+                    $('#store_or_update_form #media_id').val(data.media_id);
                     $('#store_or_update_form #date_time').val(data.date_time);
                     $('#store_or_update_form #info').val(data.info);
                     $('#store_or_update_form #page_id').val(data.page_id);

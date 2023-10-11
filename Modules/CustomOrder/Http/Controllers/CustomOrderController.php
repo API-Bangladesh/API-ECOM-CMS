@@ -17,6 +17,7 @@ use Modules\Inventory\Entities\Inventory;
 use Modules\Location\Entities\District;
 use Modules\Location\Entities\Division;
 use Modules\Order\Entities\OrderItem;
+use Modules\Media\Entities\Media;
 use Modules\PaymentMethod\Entities\PaymentMethod;
 use Modules\Product\Entities\Product;
 use Modules\CustomOrder\Http\Requests\PageRequest;
@@ -91,7 +92,7 @@ class CustomOrderController extends BaseController
                     $row[] = $value->customer->name??'';
                     $row[] = $value->customer->email??'';
                     $row[] = $value->customer->phone_number??'';
-                    $row[] = $value->media??'';
+                    $row[] = $value->media->name??'';
                     $row[] = $value->orderMessage->page->page??'';
 
                     $order_options = '<select name="order_status_id" id="order_status_id" class="form-control order_status_id" onchange="getOrderStatus(this.value, '.$value->id.')">
