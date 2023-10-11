@@ -20,7 +20,34 @@
                     <input type="hidden" name="update_id" id="update_id"/>
                     <x-form.textarea labelName="Order text" required="required" name="order_text" col="col-md-12" />
 
-                    <x-form.textbox labelName="Media" required="required" name="media" col="col-md-12" />
+                    <div class="form-group col-md-12 ">
+                        <label for="media">Media</label>
+                        <select name="media_id" id="media_id" class="form-control selectpicker" data-live-search="true" >
+                            <option value="">Select Please</option>
+                         @foreach($medias as $media)
+                            <option value="{{$media->id}}">{{$media->name}}</option>
+                         @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-12 ">
+                        <label for="page_id">ID</label>
+                        <select name="page_id" id="page_id" class="form-control selectpicker" data-live-search="true" >
+                            <option value="">Select Please</option>
+                            <option class="show btn btn-primary" value="">Create</option>
+                            @foreach($pages as $page)
+                                <option value="{{$page->id}}">{{$page->page}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-8 page">
+                        <label for="page">Add ID</label>
+                        <input type="text" name="page" id="page" class="form-control " value="" placeholder="">
+                    </div>
+                    <div class="form-group col-md-4 save">
+                        <button type="button" class="btn btn-primary btn-md mt-5" id="save">Save</button>
+                    </div>
 
                     <div class="form-group col-md-12 ">
                         <label for="date_time">Date Time</label>
@@ -33,7 +60,7 @@
 
             <!-- Modal Footer -->
             <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger btn-sm cls" data-dismiss="modal">Close</button>
             <button type="button" class="btn btn-primary btn-sm" id="save-btn"></button>
             </div>
             <!-- /modal footer -->

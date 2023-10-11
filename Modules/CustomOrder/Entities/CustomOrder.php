@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\Customer\Entities\Customer;
 use Modules\Customers\Entities\Customers;
 use Modules\Order\Entities\OrderItem;
+use Modules\Media\Entities\Media;
 use Modules\PaymentMethod\Entities\PaymentMethod;
 use Modules\Base\Entities\BaseModel;
 
@@ -36,7 +37,7 @@ class CustomOrder extends BaseModel
     protected $table = 'orders';
 
     protected $fillable = ['order_date', 'customer_id', 'billing_address', 'shipping_address',
-        'total', 'discount', 'shipping_charge','special_note', 'tax', 'grand_total', 'payment_method_id',
+        'total', 'discount', 'shipping_charge','special_note','media_id', 'tax', 'grand_total', 'payment_method_id',
         'payment_details', 'payment_status_id', 'order_status_id', 'created_at', 'updated_at'];
 
     protected $name;
@@ -54,7 +55,7 @@ class CustomOrder extends BaseModel
             $this->column_order = ['id', 'order_date', 'shipping_address', 'total', null];
         }
 
-        $query = self::with('orderItems','customer');
+        $query = self::with('orderItems','customer','orderMessage','media');
 //        $query = self::toBase();
 
         /*****************
@@ -102,6 +103,10 @@ class CustomOrder extends BaseModel
     {
         return $this->belongsTo(Customers::class, 'customer_id', 'id');
     }
+    public function orderMessage()
+    {
+        return $this->belongsTo(OrderMessage::class, 'order_message_id', 'id')->with('order');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -109,6 +114,11 @@ class CustomOrder extends BaseModel
     public function paymentMethod()
     {
         return $this->belongsTo(PaymentMethod::class, 'payment_method_id', 'id');
+    }
+
+    public function media()
+    {
+        return $this->belongsTo(Media::class, 'media_id', 'id');
     }
 
     /**

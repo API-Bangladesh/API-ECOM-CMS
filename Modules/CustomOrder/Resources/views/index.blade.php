@@ -36,7 +36,7 @@
                     </div>
                     <!-- /entry heading -->
                     @if (permission('customorder-add'))
-                        <button class="btn btn-primary btn-sm" onclick="showFormModal('Add New Custom Order','Save');clearOldImage()">
+                        <button class="btn btn-primary btn-sm add_new" onclick="showFormModal('Add New Custom Order','Save');clearOldImage()">
                             <i class="fas fa-plus-square"></i> Add New
                         </button>
                     @endif
@@ -85,6 +85,8 @@
                                 <th>Customer Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
+                                <th>Order Type</th>
+                                <th>Page</th>
                                 <th>Order Status</th>
                                 <th>Payment Status</th>
                                 <th>Action</th>
@@ -656,7 +658,6 @@
 
             $('.grand_total_text').text(grand_total);
             $('#grand_total').val(grand_total);
-
         }
 
         function getOrderStatus(order_status_id,id) {
@@ -715,6 +716,12 @@
                         $('#billing').append(`<option value=""> Please select </option>`);
                         $('#shipping').append(`<option value=""> Please select </option>`);
                     }
+                    //if shipping address set as billing address
+                    if ($("#isDefaultShipping").is(":checked")) {
+                        setTimeout(function(){
+                            $('#billing_address').val($('#shipping_address').val());
+                        },1200)
+                    }
 
                     if(type=='customer_id') {
                         // Use the map function to create a new array of titles
@@ -749,9 +756,16 @@
             });
         };
 
+        $("#isDefaultShipping").click(function(){
+            $('#billing_address').val($('#shipping_address').val());
+        });
+
         //create customer
         $(document).ready(function() {
-            // $('#customer_id').append(`<button type="button" class="btn btn-primary shown">Create</button>`);
+            $('.customer_create').selectpicker({
+                noneResultsText: '<button type="button" class="btn btn-primary shown">Create</button>'
+            });
+
             var createOption = $('<option>', {
                 value: 'create',
                 text: 'Create',
@@ -785,7 +799,8 @@
                         'div_id': div_id // Pass div_id as the 'dcId' parameter
                     },
                     success: function (data) {
-                        var district_option = '';
+                        $('#district_id').empty();
+                        var district_option = '<option value="">Please select</option>';
                         data.map(function(district,key){
                             district_option +=`<option value="${district.id}">${district.name}</option>`;
                         });
@@ -808,7 +823,8 @@
                         'dis_id': dis_id // Pass div_id as the 'dcId' parameter
                     },
                     success: function (data) {
-                        var dpazila_option = '';
+                        $('#upazila_id').empty();
+                        var dpazila_option = '<option value="">Please select</option>';
                         data.map(function(dpazila,key){
                             dpazila_option +=`<option value="${dpazila.id}">${dpazila.name}</option>`;
                         });
@@ -843,24 +859,25 @@
             processData: false,
             cache: false,
             beforeSend: function(){
-                $('#save-btn').addClass('kt-spinner kt-spinner--md kt-spinner--light');
+                $('#save-customer').addClass('kt-spinner kt-spinner--md kt-spinner--light');
             },
             complete: function(){
-                $('#save-btn').removeClass('kt-spinner kt-spinner--md kt-spinner--light');
+                $('#save-customer').removeClass('kt-spinner kt-spinner--md kt-spinner--light');
             },
             success: function (data) {
-                $('#store_or_update_form').find('.is-invalid').removeClass('is-invalid');
-                $('#store_or_update_form').find('.error').remove();
+                load_customer();
+                $('#store_or_update_customer').find('.is-invalid').removeClass('is-invalid');
+                $('#store_or_update_customer').find('.error').remove();
                 if (data.status == false) {
                     $.each(data.errors, function (key, value) {
-                        $('#store_or_update_form input#' + key).addClass('is-invalid');
-                        $('#store_or_update_form textarea#' + key).addClass('is-invalid');
-                        $('#store_or_update_form select#' + key).parent().addClass('is-invalid');
+                        $('#store_or_update_customer input#' + key).addClass('is-invalid');
+                        $('#store_or_update_customer textarea#' + key).addClass('is-invalid');
+                        $('#store_or_update_customer select#' + key).parent().addClass('is-invalid');
                         if(key == 'code'){
-                            $('#store_or_update_form #' + key).parents('.form-group').append(
+                            $('#store_or_update_customer #' + key).parents('.form-group').append(
                                 '<small class="error text-danger">' + value + '</small>');
                         }else{
-                            $('#store_or_update_form #' + key).parent().append(
+                            $('#store_or_update_customer #' + key).parent().append(
                                 '<small class="error text-danger">' + value + '</small>');
                         }
                     });
@@ -872,19 +889,44 @@
                         } else {
                             table.ajax.reload();
                         }
-                        $('#store_or_update_modal').modal('hide');
-                        $(this).find('#store_or_update_modal').trigger('reset');
+                        $('#myModal2').modal('hide');
+                        $(this).find('#myModal2').trigger('reset');
 
                     }
                 }
 
             },
-            error: function (xhr, ajaxOption, thrownError) {
-                console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
+            error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
+
+                if(jqXHR.status === 422) {
+                    var errors = $.parseJSON(jqXHR.responseText);
+                    $.each(errors.errors, function (key, value) {
+                        $('#store_or_update_customer input#' + key).addClass('is-invalid');
+                        $('#store_or_update_customer textarea#' + key).addClass('is-invalid');
+                        $('#store_or_update_customer select#' + key).parent().addClass('is-invalid');
+                        if(key == 'code'){
+                            $('#store_or_update_customer #' + key).parents('.form-group').append(
+                                '<small class="error text-danger">' + value + '</small>');
+                        }else{
+                            $('#store_or_update_customer #' + key).parent().append(
+                                '<small class="error text-danger">' + value + '</small>');
+                        }
+
+                    });
+                }
+
+                if (jqXHR.status === 403) {
+                    Swal.fire({
+                        title: "Errr!",
+                        text: 'You do not have the right permission!',
+                        icon: "danger",
+                        width:400,
+                        button: "Ok!",
+                    });
+                }
             }
         });
     });
-
 
    //single item quantity change calculation
     function getQuantityList(value='',className='',sl){
@@ -929,7 +971,7 @@
 
             $('.grand_total_text').text(grand_total);
             $('#grand_total').val(grand_total);
-        },2500);
+        },1500);
     }
 
     //discount & shipping charge
@@ -947,7 +989,15 @@
         $('#grand_total').val(grand_total);
     })
 
-    //view custom order
+    //default load todays date
+        $(document).ready(function() {
+            $('.add_new').click(function() {
+                var currentDate = new Date().toISOString().slice(0, 16); // Get the current date and time in ISO format
+                $("#order_date").val(currentDate);
+            });
+        });
+
+        //view custom order
         $(document).on('click', '.view_data', function () {
             let id = $(this).data('id');
             rowCounter = 0;
@@ -1080,5 +1130,30 @@
             }
         });
 
+        function load_customer(){
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+            $.ajax({
+                type: 'POST',
+                url: '{{ route("ordermessage.load_customer") }}',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken // Include the CSRF token in the headers
+                },
+                success: function (data) {
+                    console.log(data);
+                    $('#customer_id').empty();
+                    var customer_option = '<option value="create" class="btn btn-primary shown">Create</option>' +
+                        '<option value="">Please select</option>';
+
+                    data.map(function(customer,key){
+                        customer_option +=`<option value="${customer.id}">${customer.name}</option>`;
+                    });
+                    $('#customer_id').append(customer_option);
+                    $('.selectpicker').selectpicker('refresh');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
     </script>
 @endpush

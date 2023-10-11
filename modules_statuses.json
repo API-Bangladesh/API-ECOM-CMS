@@ -47,5 +47,7 @@
     "Customers": true,
     "B2B": true,
     "Module": true,
-    "CustomOrder": true
+    "CustomOrder": true,
+    "Page": true,
+    "Media": true
 }

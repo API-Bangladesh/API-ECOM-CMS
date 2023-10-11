@@ -27,17 +27,22 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('district-by-division', 'CustomOrderController@district_by_division')->name('district_by_division');
         Route::get('upazila-by-district', 'CustomOrderController@upazila_by_district')->name('upazila_by_district');
         Route::post('save-customer', 'CustomOrderController@save_customer')->name('save_customer');
+        Route::post('save-page', 'CustomOrderController@save_page')->name('save_page');
+        Route::get('get-pages', 'CustomOrderController@get_pages')->name('get_pages');
     });
 });
 
-Route::prefix('ordermessage')->group(function() {
-    Route::get('/', 'CustomOrderMessageController@index');
+
+    Route::get('ordermessage', 'CustomOrderMessageController@index');
     Route::group(['prefix'=>'ordermessage','as'=>'ordermessage.'],function(){
+        Route::post('load-customer', 'CustomOrderMessageController@load_customer')->name('load_customer');
         Route::post('datatable-data', 'CustomOrderMessageController@get_datatable_data')->name('datatable.data');
         Route::post('store-or-update', 'CustomOrderMessageController@store_or_update_data')->name('store.or.update');
         Route::post('edit', 'CustomOrderMessageController@edit')->name('edit');
         Route::post('delete', 'CustomOrderMessageController@delete')->name('delete');
         Route::post('bulk-delete', 'CustomOrderMessageController@bulk_delete')->name('bulk.delete');
         Route::post('change-status', 'CustomOrderMessageController@change_status')->name('change.status');
+        Route::post('message-store-or-update', 'CustomOrderMessageController@message_store_or_update_data')->name('messagestore.or.update');
+        Route::post('message-order-edit', 'CustomOrderMessageController@message_order_edit')->name('message_order_edit');
     });
-});
+

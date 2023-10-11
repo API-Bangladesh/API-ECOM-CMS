@@ -22,7 +22,7 @@
                         <div class="form-group col-md-4 required">
                             <label for="customer_id">Customer</label>
                             <select name="customer_id" id="customer_id" class="form-control customer_create selectpicker" onchange="getCustomer(this.value,'customer_id')" data-live-search="true" data-live-search-placeholder="Search" title="Choose one of the following" tabindex="null">
-                                <option value="">Select Please</option>
+                                <option value="">Please select</option>
                                 @if (!$customers->isEmpty())
                                     @foreach ($customers as $customer)
                                         <option value="{{ $customer->id }}">{{ $customer->name }}</option>
@@ -32,26 +32,31 @@
                         </div>
 
                         <div class="form-group col-md-4">
-                            <label for="billing_address">Set Billing Address</label>
-                            <select name="billing" id="billing" class="form-control selectpicker" onchange="getCustomer(this.value,'address_id','billing')" data-live-search="true" >
-                                <option value=""> Select Please</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-4">
                             <label for="shipping">Set Shipping Address</label>
                             <select name="shipping" id="shipping" class="form-control selectpicker" onchange="getCustomer(this.value,'address_id','shipping')" data-live-search="true" >
-                                <option value=""> Select Please</option>
+                                <option value="">Please select</option>
+                            </select>
+                            <label class="mt-3" for="isDefaultShipping">
+                                <input type="checkbox" id="isDefaultShipping"> Set Shipping address as billing address
+                            </label>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="billing_address">Set Billing Address</label>
+                            <select name="billing" id="billing" class="form-control selectpicker" onchange="getCustomer(this.value,'address_id','billing')" data-live-search="true" >
+                                <option value="">Please select</option>
                             </select>
                         </div>
+
                     </div>
 
                     <div class="row">
-                        <x-form.textarea labelName="Billing Address" placeholder="Billing Address" name="billing_address" id="billing_address" col="col-md-4 required" />
-                        <x-form.textarea labelName="Shipping Address" placeholder="Shipping Address" name="shipping_address" id="shipping_address" col="col-md-4 required" />
                         <div class="form-group col-md-4 required">
                             <label for="order_date">Delivery Time</label>
                             <input type="datetime-local" name="order_date" id="order_date" class="form-control " value="" placeholder="Enter Order Date">
                         </div>
+                        <x-form.textarea labelName="Shipping Address" placeholder="Shipping Address" name="shipping_address" id="shipping_address" col="col-md-4 required" />
+                        <x-form.textarea labelName="Billing Address" placeholder="Billing Address" name="billing_address" id="billing_address" col="col-md-4 required" />
                     </div>
 
 {{--                    <div class="row">--}}
@@ -65,7 +70,7 @@
                             <div class="form-group col-md-4 required">
                                 <label for="inventory_id-0">Products</label>
                                 <select name="inventory_id[]" id="inventory_id-0" class="form-control selectpicker" onchange="getVariantOptionList(this.value, 'row-0', 0); getQuantityList(this.value, 'quantity-0', 0)" data-live-search="true" >
-                                    <option value=""> Select Please</option>
+                                    <option value="">Please select</option>
                                     @foreach ($inventories as $inventory)
                                         <option value="{{ $inventory->id }}">{{ $inventory->title }}</option>
                                     @endforeach
@@ -101,7 +106,7 @@
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="special_note">Special note</label>
-                                    <input type="text" name="special_note" id="special_note" class="form-control " value="" placeholder="Enter Special Note">
+                                    <textarea name="special_note" id="special_note" class="form-control " placeholder="Enter Special Note"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -128,7 +133,7 @@
                                 <div class="form-group col-md-12">
                                     <label for="order_status_id">Order Status</label>
                                     <select name="order_status_id" id="order_status_id" class="form-control selectpicker" data-live-search="true" >
-                                        <option value=""> Select Please</option>
+                                        <option value=""> Please select</option>
                                         <option value="6">NEW</option>
                                         <option value="7">CONFIRMED</option>
                                         <option value="1">PENDING</option>
@@ -143,7 +148,7 @@
                                 <div class="form-group col-md-12">
                                     <label for="payment_method_id">Payment Method</label>
                                     <select name="payment_method_id" id="payment_method_id" class="form-control selectpicker" data-live-search="true" >
-                                        <option value=""> Select Please</option>
+                                        <option value="">Please select</option>
                                         @foreach ($payment_methods as $payment_method)
                                             <option value="{{ $payment_method->id }}">{{ $payment_method->name }}</option>
                                         @endforeach
@@ -153,7 +158,7 @@
                                 <div class="form-group col-md-12">
                                     <label for="payment_method_id">Payment Status</label>
                                     <select name="payment_status_id" id="payment_status_id" class="form-control selectpicker" data-live-search="true" >
-                                        <option value=""> Select Please</option>
+                                        <option value="">Please select</option>
                                         <option value="{{\Modules\Order\Entities\Order::PAYMENT_STATUS_PAID}}">PAID</option>
                                         <option value="{{\Modules\Order\Entities\Order::PAYMENT_STATUS_UNPAID}}">UNPAID</option>
                                     </select>

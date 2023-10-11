@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Customer\Entities\Customer;
 use Modules\Customers\Entities\Customers;
+use Modules\Media\Entities\Media;
 use Modules\PaymentMethod\Entities\PaymentMethod;
 use Modules\Base\Entities\BaseModel;
 
@@ -30,9 +31,9 @@ class Order extends BaseModel
 
     protected $table = 'orders';
 
-    protected $fillable = ['order_date', 'customer_id', 'billing_address', 'shipping_address',
+    protected $fillable = ['order_date', 'customer_id', 'media_id', 'billing_address', 'shipping_address',
         'total', 'discount', 'shipping_charge','tax','grand_total','payment_method_id',
-        'payment_details','payment_status_id','order_status_id','created_at','updated_at'];
+        'payment_details','payment_status_id','order_message_id','order_status_id','created_at','updated_at'];
 
     protected $name;
 
@@ -49,7 +50,7 @@ class Order extends BaseModel
             $this->column_order = ['id','order_date', 'shipping_address', 'total',null];
         }
 
-        $query = self::with('orderItems');
+        $query = self::with('orderItems','media');
 //        $query = self::toBase();
 
         /*****************
@@ -99,6 +100,11 @@ class Order extends BaseModel
     public function paymentMethod()
     {
         return $this->belongsTo(PaymentMethod::class, 'payment_method_id', 'id');
+    }
+
+    public function media()
+    {
+        return $this->belongsTo(Media::class, 'media_id', 'id');
     }
 
     /**

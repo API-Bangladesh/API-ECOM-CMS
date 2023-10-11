@@ -26,16 +26,13 @@
             </div>
             <!-- Grid Item -->
             <div class="col-xl-12">
-
                 <!-- Entry Header -->
                 <div class="dt-entry__header">
-
                     <!-- Entry Heading -->
                     <div class="dt-entry__heading">
                         <h2 class="dt-page__title mb-0 text-primary"><i class="{{ $page_icon }}"></i> {{ $sub_title }}</h2>
                     </div>
                     <!-- /entry heading -->
-
                 </div>
                 <!-- /entry header -->
 
@@ -44,14 +41,12 @@
 
                     <!-- Card Body -->
                     <div class="dt-card__body">
-
                         <form id="form-filter">
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="name">Shipping Address</label>
                                     <input type="text" class="form-control" name="name" id="name" placeholder="Enter shipping address">
                                 </div>
-
                                 <div class="form-group col-md-8 pt-24">
                                     <button type="button" class="btn btn-danger btn-sm float-right" id="btn-reset"
                                             data-toggle="tooltip" data-placement="top" data-original-title="Reset Data">
@@ -78,6 +73,7 @@
                                 <th>Sl</th>
                                 <th>Order Date</th>
                                 <th>Order ID</th>
+                                <th>Order Type</th>
                                 <th>Total</th>
                                 <th>Order Status</th>
                                 <th>Payment Status</th>
@@ -86,16 +82,12 @@
                             </thead>
                             <tbody></tbody>
                         </table>
-
                     </div>
                     <!-- /card body -->
-
                 </div>
                 <!-- /card -->
-
             </div>
             <!-- /grid item -->
-
         </div>
         <!-- /grid -->
 
@@ -572,9 +564,6 @@
                 }
             });
 
-
-
-
             $(document).on('click', '.delete_data', function () {
                 let id    = $(this).data('id');
                 let name  = $(this).data('name');
@@ -630,10 +619,6 @@
             $('.remove-files').on('click', function(){
                 $(this).parents('.col-md-12').remove();
             });
-
-
-
-
         });
 
             function getOrderStatus(order_id,id) {
