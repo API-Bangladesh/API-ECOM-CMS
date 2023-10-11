@@ -344,10 +344,7 @@
                         success: function (data) {
 
                             $('#store_or_update_form #update_id').val(data.id);
-                            $('#store_or_update_form #name').val(data.name);
-                            $('#store_or_update_form #code').val(data.code);
-                            $('#store_or_update_form #old_image').val(data.image);
-                            $('#store_or_update_form .selectpicker').selectpicker('refresh');
+                            $('#store_or_update_form #page').val(data.page);
 
                             $('#store_or_update_modal').modal({
                                 keyboard: false,
@@ -364,9 +361,6 @@
                     });
                 }
             });
-
-
-
 
             $(document).on('click', '.delete_data', function () {
                 let id    = $(this).data('id');
@@ -407,8 +401,6 @@
             });
 
         });
-
-
 
         function showStoreFormModal(modal_title, btn_text)
         {
