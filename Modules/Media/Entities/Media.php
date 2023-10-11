@@ -1,0 +1,71 @@
+<?php
+namespace Modules\Media\Entities;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Modules\Base\Entities\BaseModel;
+
+class Media extends BaseModel
+{
+    use HasFactory;
+
+    protected $table = 'medias';
+
+    protected $fillable = ['name', 'created_at', 'updated_at'];
+
+    protected $name;
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    private function get_datatable_query()
+    {
+        if (permission('paymentmethod-bulk-delete')) {
+            $this->column_order = [null, 'name', null];
+        } else {
+            $this->column_order = ['name', null];
+        }
+
+        $query = self::toBase();
+
+        /*****************
+         * *Search Data **
+         ******************/
+        if (!empty($this->name)) {
+            $query->where('name', 'like', '%' . $this->name . '%');
+        }
+
+        if (isset($this->orderValue) && isset($this->dirValue)) {
+            $query->orderBy($this->column_order[$this->orderValue], $this->dirValue);
+        } else if (isset($this->order)) {
+            $query->orderBy(key($this->order), $this->order[key($this->order)]);
+        }
+        return $query;
+    }
+
+    public function getDatatableList()
+    {
+        $query = $this->get_datatable_query();
+        if ($this->lengthVlaue != -1) {
+            $query->offset($this->startVlaue)->limit($this->lengthVlaue);
+        }
+        return $query->get();
+    }
+
+    public function count_filtered()
+    {
+        $query = $this->get_datatable_query();
+        return $query->get()->count();
+    }
+
+    public function count_all()
+    {
+        return self::toBase()->get()->count();
+    }
+
+    protected static function newFactory()
+    {
+        return \Modules\PaymentMethod\Database\factories\MediaFactory::new();
+    }
+}
