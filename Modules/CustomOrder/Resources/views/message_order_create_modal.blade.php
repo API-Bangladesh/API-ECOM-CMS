@@ -23,7 +23,7 @@
                             <label for="order_text">Order Messsage</label>
                             <textarea id="myTextarea" class="form-control " rows="5" cols="40"></textarea>
                             <input type="hidden" name="order_message_id" id="order_message_id">
-                            <input type="hidden" name="media" id="media" class="media">
+                            <input type="hidden" name="media_id" id="media_id" class="media">
                         </div>
 
                         <div class="form-group col-md-6 required">

@@ -938,7 +938,7 @@ function showMessageFormModal(id = null, media=null, order_id=null) {
                 // Order message display using the updateOrderText function
                 $('#myTextarea').val(data.order_text);
                 $('#order_message_id').val(id);
-                $('.media').val(media);
+                $('.media_id').val(media_id);
             },
             error: function (xhr, ajaxOption, thrownError) {
                 console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
