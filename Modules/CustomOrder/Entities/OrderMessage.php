@@ -27,9 +27,9 @@ class OrderMessage extends BaseModel
     {
 
         if (permission('ordermessage-bulk-delete')) {
-            $this->column_order = [null, 'title', 'sale_price', 'stock_quantity', 'status', null];
+            $this->column_order = [null, 'order_text', 'media_id', 'page_id', 'info', null];
         } else {
-            $this->column_order = ['title', 'sale_price', 'stock_quantity', 'status', null];
+            $this->column_order = ['order_text', 'media_id', 'page_id', 'info', null];
         }
 
 //        $query = self::toBase();
@@ -79,4 +79,3 @@ class OrderMessage extends BaseModel
         return $this->belongsTo(Media::class,'media_id','id');
     }
 }
-

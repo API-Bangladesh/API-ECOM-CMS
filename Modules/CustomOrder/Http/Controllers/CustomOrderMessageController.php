@@ -71,7 +71,7 @@ class CustomOrderMessageController extends BaseController
                         $action .= ' <a class="dropdown-item edit_data" data-id="' . $value->id . '"><i class="fas fa-edit text-primary"></i> Edit</a>';
                     }
                     if (permission('ordermessage-delete')) {
-                        $action .= ' <a class="dropdown-item delete_data"  data-id="' . $value->id . '" data-name="' . $value->media . '"><i class="fas fa-trash text-danger"></i> Delete</a>';
+                        $action .= ' <a class="dropdown-item delete_data"  data-id="' . $value->id . '" data-name="' . $value->media_id . '"><i class="fas fa-trash text-danger"></i> Delete</a>';
                     }
 
                     $row = [];
@@ -80,11 +80,11 @@ class CustomOrderMessageController extends BaseController
                     }
                     $row[] = $no;
 
-                    $row[] = $value->order_text;
+                    $row[] = $value->order_text??'';
                     $row[] = $value->media->name??'';
                     $row[] = $value->page->page??'';
-                    $row[] = $value->date_time;
-                    $row[] = $value->info;
+                    $row[] = $value->info??'';
+                    $row[] = date('d-m-Y', strtotime($value->date_time));
                     $row[] = action_button($action);
                     $data[] = $row;
                 }
@@ -278,4 +278,3 @@ class CustomOrderMessageController extends BaseController
         return response()->json($customer);
     }
 }
-

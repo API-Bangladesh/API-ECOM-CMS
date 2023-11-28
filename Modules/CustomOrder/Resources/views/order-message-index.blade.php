@@ -79,8 +79,8 @@
                                 <th>Order Text</th>
                                 <th>Media</th>
                                 <th>Page</th>
-                                <th>Date Time</th>
                                 <th>Info</th>
+                                <th>Date Time</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
